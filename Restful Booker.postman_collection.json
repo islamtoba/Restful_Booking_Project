@@ -1,0 +1,977 @@
+{
+	"info": {
+		"_postman_id": "763a0ebe-0d50-478c-ad1e-232ca15d6be8",
+		"name": "Restful Booker",
+		"description": "## Restful Booker\n\n<img src=\"https://content.pstmn.io/a7eab71f-6bff-4a03-93ab-b41e2e8eed3b/b2ctaW1hZ2UucG5n\" alt=\"\">\n\n## API documentation for the playground API restful-booker.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22921253",
+		"_collection_link": "https://www.postman.com/islamtouba/workspace/xyz/collection/22921253-763a0ebe-0d50-478c-ad1e-232ca15d6be8?action=share&source=collection_link&creator=22921253"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Create Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 300ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+									"});\r",
+									"pm.test(\"Check Login response body contain token\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"token\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check Login response body not contain token\", function(){\r",
+									"    pm.expect(pm.response.json()).to.not.have.property(\"Token\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check Login response body contain token not null\",function(){\r",
+									"    pm.expect(pm.response.json().token).to.not.be.null\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check Login response body contain token not empty\",function(){\r",
+									"    pm.expect(pm.response.json().token).to.not.be.undefined\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check Login length is greater than 12  digit\", function () {\r",
+									"    pm.expect(pm.response.json().token.length).to.be.greaterThan(12);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check token type not integer\", function(){\r",
+									"pm.expect(typeof pm.response.json().token).to.not.be.equal(\"integer\")\r",
+									"});\r",
+									"\r",
+									"/////////////////////////\r",
+									"\r",
+									"pm.collectionVariables.set(\"token\", pm.response.json().token);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " \r\n    {\r\n        \"username\": \"admin\",\r\n        \"password\": \"password123\"\r\n    }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{URL}}/auth",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"auth"
+							]
+						},
+						"description": "# Auth - CreateToken\n\nCreates a new auth token to use for access to the PUT and DELETE /booking\n\n### Authentication Endpoint\n\nThis endpoint allows users to authenticate and obtain access to the system.\n\n#### Request Body\n\n- `username` (string) - The username of the user.\n    \n- `password` (string) - The password of the user.\n    \n\n#### Response\n\nThe response will include the authentication token or an error message in case of invalid credentials or other issues."
+					},
+					"response": []
+				}
+			],
+			"description": "# Auth - CreateToken\n\nCreates a new auth token to use for access to the PUT and DELETE /booking\n\nEndFragment"
+		},
+		{
+			"name": "Booking",
+			"item": [
+				{
+					"name": "Create Booking",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"function getRandomTotalPrice() {\r",
+									"  const min = 100;\r",
+									"  const max = 900;\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"const totalprice = getRandomTotalPrice();\r",
+									"pm.collectionVariables.set(\"totalprice\", totalprice)\r",
+									"console.log(\"Total Price:\", totalprice);\r",
+									"\r",
+									"///////////////////////////////////////////////////////////////\r",
+									"\r",
+									"function getRandomMeal() {\r",
+									"  const meals = [\"breakfast\", \"lunch\", \"dinner\"];\r",
+									"  const randomIndex = Math.floor(Math.random() * meals.length);\r",
+									"  return meals[randomIndex];\r",
+									"}\r",
+									"\r",
+									"const meal = getRandomMeal();\r",
+									"pm.collectionVariables.set(\"additionalneeds\", meal);\r",
+									"console.log(\"Random Meal:\", meal);\r",
+									"\r",
+									"///////////////////////////////////////////////////////////////\r",
+									"\r",
+									"// Utility to format date as YYYY-MM-DD\r",
+									"const formatDate = date => date.toISOString().split('T')[0];\r",
+									"\r",
+									"// Generate a random check-in date between 1990-01-01 and 1999-12-30\r",
+									"const checkin = formatDate(new Date(+new Date('1990-01-01') + Math.random() * (new Date('1999-12-30') - new Date('1990-01-01'))));\r",
+									"pm.collectionVariables.set(\"checkin\", checkin);\r",
+									"console.log(\"Check-in:\", checkin);\r",
+									"\r",
+									"// Generate a random checkout date at least 1 day after check-in and before 1999-12-31\r",
+									"const nextDay = new Date(checkin);\r",
+									"nextDay.setDate(nextDay.getDate() + 1);\r",
+									"\r",
+									"const endLimit = new Date('1999-12-31');\r",
+									"const checkout = nextDay > endLimit\r",
+									"  ? formatDate(endLimit)\r",
+									"  : formatDate(new Date(+nextDay + Math.random() * (endLimit - nextDay)));\r",
+									"\r",
+									"pm.collectionVariables.set(\"checkout\", checkout);\r",
+									"console.log(\"Check-out:\", checkout);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check bookingid not null and not empty and equal number\", function () {\r",
+									"    pm.collectionVariables.set(\"bookingid\", pm.response.json().bookingid);\r",
+									"    pm.expect(pm.response.json().bookingid).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().bookingid).to.not.be.undefined;\r",
+									"    pm.expect(typeof pm.response.json().bookingid).to.be.equal(\"number\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check booking type is object and not null or empty\", function () {\r",
+									"    pm.expect(pm.response.json().booking).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().booking).to.not.be.undefined;\r",
+									"    pm.expect(typeof pm.response.json().booking).to.be.equal(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check firstname is equal to the expected value\", function () {\r",
+									"    pm.expect(pm.response.json().booking.firstname).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().booking.firstname).to.not.be.undefined;\r",
+									"    pm.expect(typeof pm.response.json().booking.firstname).to.be.eql(\"string\");\r",
+									"    pm.expect(pm.response.json().booking.firstname).to.eql(JSON.parse(pm.request.body.raw).firstname)\r",
+									"    pm.collectionVariables.set(\"firstname\", pm.response.json().booking.firstname);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check lastname is equal to the expected value\", function () {\r",
+									"    pm.expect(pm.response.json().booking.lastname).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().booking.lastname).to.not.be.undefined;\r",
+									"    pm.expect(typeof pm.response.json().booking.lastname).to.be.eql(\"string\");\r",
+									"    pm.expect(pm.response.json().booking.lastname).to.eql(JSON.parse(pm.request.body.raw).lastname)\r",
+									"    pm.collectionVariables.set(\"lastname\", pm.response.json().booking.lastname);\r",
+									"\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check bookingdates type is object\", function () {\r",
+									"\r",
+									"    pm.expect(pm.response.json().booking.bookingdates).to.exist;\r",
+									"    pm.expect(pm.response.json().booking.bookingdates).to.be.an(\"object\");\r",
+									"    pm.expect(pm.response.json().booking.bookingdates).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().booking.bookingdates).to.not.be.undefined;\r",
+									"\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check totalprice is equal to the expected value\", function () {\r",
+									"    const expectedTotalPrice = parseInt(pm.collectionVariables.get(\"totalprice\"));\r",
+									"\r",
+									"    pm.expect(pm.response.json().booking.totalprice).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().booking.totalprice).to.not.be.undefined;\r",
+									"    pm.expect(pm.response.json().booking.totalprice).to.be.a('number');\r",
+									"    pm.expect(pm.response.json().booking.totalprice).to.eql(expectedTotalPrice);\r",
+									"    pm.collectionVariables.set(\"totalprice\", pm.response.json().booking.totalprice);\r",
+									"\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check depositpaid is equal to the expected value\", function () {\r",
+									"    pm.expect(pm.response.json().booking.depositpaid).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().booking.depositpaid).to.not.be.undefined;\r",
+									"    pm.expect(typeof pm.response.json().booking.depositpaid).to.be.eql(\"boolean\");\r",
+									"    pm.expect(pm.response.json().booking.depositpaid).to.eql(JSON.parse(pm.request.body.raw).depositpaid)\r",
+									"    pm.collectionVariables.set(\"depositpaid\", pm.response.json().booking.depositpaid);\r",
+									"\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check checkin type is object\", function () {\r",
+									"    pm.expect(pm.response.json().booking.bookingdates.checkin).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().booking.bookingdates.checkin).to.not.be.undefined;\r",
+									"    pm.expect(pm.response.json().booking.bookingdates.checkin).to.be.a('string');\r",
+									"    pm.expect(pm.response.json().booking.bookingdates.checkin).to.eql(pm.variables.get(\"checkin\"));\r",
+									"    pm.collectionVariables.set(\"checkin\", pm.response.json().booking.bookingdates.checkin);\r",
+									"\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check checkout type is object\", function () {\r",
+									"    pm.expect(pm.response.json().booking.bookingdates.checkout).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().booking.bookingdates.checkout).to.not.be.undefined;\r",
+									"    pm.expect(pm.response.json().booking.bookingdates.checkout).to.be.a('string');\r",
+									"    pm.expect(pm.response.json().booking.bookingdates.checkout).to.eql(pm.variables.get(\"checkout\"));\r",
+									"    pm.collectionVariables.set(\"checkout\", pm.response.json().booking.bookingdates.checkout);\r",
+									"\r",
+									"\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check additionalneeds  is exist and not null or undefined and has value\", function () {\r",
+									"    pm.expect(pm.response.json().booking.additionalneeds).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().booking.additionalneeds).to.not.be.undefined;\r",
+									"    pm.expect(pm.response.json().booking.additionalneeds).to.be.a('string');\r",
+									"    pm.expect(pm.response.json().booking.additionalneeds).to.eql(pm.variables.get(\"additionalneeds\"));\r",
+									"    pm.collectionVariables.set(\"additionalneeds\", pm.response.json().booking.additionalneeds);\r",
+									"\r",
+									"\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"{{$randomFirstName}}\",\r\n    \"lastname\" : \"{{$randomLastName}}\",\r\n    \"totalprice\" : \"{{totalprice}}\",\r\n    \"depositpaid\" : {{$randomBoolean}},\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"{{checkin}}\",\r\n        \"checkout\" : \"{{checkout}}\"\r\n    },\r\n    \"additionalneeds\" : \"{{additionalneeds}}\"\r\n} ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{URL}}/booking",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"booking"
+							]
+						},
+						"description": "# Booking - CreateBooking\n\nCreates a new booking in the API\n\n### Request\n\nThis is an HTTP POST request to create a new booking. The request body should be in raw JSON format and include the following parameters:\n\n- `firstname` (string): The first name of the guest.\n    \n- `lastname` (string): The last name of the guest.\n    \n- `totalprice` (string): The total price of the booking.\n    \n- `depositpaid` (object): Whether the deposit is paid or not.\n    \n\n### Response\n\nThe response of this request is a JSON schema. It will include the schema for the booking details."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Booking ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check firstname is equal to the expected value\", function () {\r",
+									"    pm.expect(pm.response.json().firstname).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().firstname).to.not.be.undefined;\r",
+									"    pm.expect(typeof pm.response.json().firstname).to.be.eql(\"string\");\r",
+									"    pm.expect(pm.response.json().firstname).to.eql(pm.collectionVariables.get(\"firstname\"));\r",
+									"\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check lastname is equal to the expected value\", function () {\r",
+									"    pm.expect(pm.response.json().lastname).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().lastname).to.not.be.undefined;\r",
+									"    pm.expect(typeof pm.response.json().lastname).to.be.eql(\"string\");\r",
+									"    pm.expect(pm.response.json().lastname).to.eql(pm.collectionVariables.get(\"lastname\"));\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check bookingdates type is object\", function () {\r",
+									"\r",
+									"    pm.expect(pm.response.json().bookingdates).to.be.an(\"object\");\r",
+									"    pm.expect(pm.response.json().bookingdates).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().bookingdates).to.not.be.undefined;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check totalprice is equal to the expected value\", function () {\r",
+									"    const expectedTotalPrice = parseInt(pm.collectionVariables.get(\"totalprice\"));\r",
+									"\r",
+									"    pm.expect(pm.response.json().totalprice).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().totalprice).to.not.be.undefined;\r",
+									"    pm.expect(pm.response.json().totalprice).to.be.a('number');\r",
+									"    pm.expect(pm.response.json().totalprice).to.eql(pm.collectionVariables.get(\"totalprice\"));\r",
+									"\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check depositpaid is equal to the expected value\", function () {\r",
+									"    pm.expect(pm.response.json().depositpaid).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().depositpaid).to.not.be.undefined;\r",
+									"    pm.expect(typeof pm.response.json().depositpaid).to.be.eql(\"boolean\");\r",
+									"    pm.expect(pm.response.json().depositpaid).to.eql(pm.collectionVariables.get(\"depositpaid\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check checkin type is object\", function () {\r",
+									"    pm.expect(pm.response.json().bookingdates.checkin).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().bookingdates.checkin).to.not.be.undefined;\r",
+									"    pm.expect(pm.response.json().bookingdates.checkin).to.be.a('string');\r",
+									"    pm.expect(pm.response.json().bookingdates.checkin).to.eql(pm.collectionVariables.get(\"checkin\"));\r",
+									"});\r",
+									"pm.test(\"Check checkout type is object\", function () {\r",
+									"    pm.expect(pm.response.json().bookingdates.checkout).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().bookingdates.checkout).to.not.be.undefined;\r",
+									"    pm.expect(pm.response.json().bookingdates.checkout).to.be.a('string');\r",
+									"    pm.expect(pm.response.json().bookingdates.checkout).to.eql(pm.collectionVariables.get(\"checkout\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check additionalneeds  is exist and not null or undefined and has value\", function () {\r",
+									"    pm.expect(pm.response.json().additionalneeds).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().additionalneeds).to.not.be.undefined;\r",
+									"    pm.expect(pm.response.json().additionalneeds).to.be.a('string');\r",
+									"    pm.expect(pm.response.json().additionalneeds).to.eql(pm.collectionVariables.get(\"additionalneeds\"));\r",
+									"\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{URL}}/booking/:id",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"booking",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{bookingid}}"
+								}
+							]
+						},
+						"description": "# Booking - GetBooking\n\nReturns a specific booking based upon the booking id provided  \n  \nThis API endpoint makes an HTTP GET request to retrieve the details of a specific booking identified by the provided ID. The request URL should be in the format https://{{URL}}/booking/:id, where :id is the unique identifier of the booking.\n\n### Request Body\n\nThis request does not require a request body.\n\n### Response Body\n\nThe response will include the details of the booking identified by the provided ID. The response body will contain information such as the booking ID, booking dates, room details, and additional guest information."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Booking Data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check firstname is equal to the expected value\", function () {\r",
+									"    pm.expect(pm.response.json().firstname).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().firstname).to.not.be.undefined;\r",
+									"    pm.expect(typeof pm.response.json().firstname).to.be.eql(\"string\");\r",
+									"    pm.expect(pm.response.json().firstname).to.eql(JSON.parse(pm.request.body.raw).firstname)\r",
+									"    pm.collectionVariables.set(\"firstname\", pm.response.json().firstname);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check lastname is equal to the expected value\", function () {\r",
+									"    pm.expect(pm.response.json().lastname).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().lastname).to.not.be.undefined;\r",
+									"    pm.expect(typeof pm.response.json().lastname).to.be.eql(\"string\");\r",
+									"    pm.expect(pm.response.json().lastname).to.eql(JSON.parse(pm.request.body.raw).lastname)\r",
+									"    pm.collectionVariables.set(\"lastname\", pm.response.json().lastname);\r",
+									"\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check bookingdates type is object\", function () {\r",
+									"\r",
+									"    pm.expect(pm.response.json().bookingdates).to.exist;\r",
+									"    pm.expect(pm.response.json().bookingdates).to.be.an(\"object\");\r",
+									"    pm.expect(pm.response.json().bookingdates).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().bookingdates).to.not.be.undefined;\r",
+									"\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check totalprice is equal to the expected value\", function () {\r",
+									"    const expectedTotalPrice = parseInt(pm.collectionVariables.get(\"totalprice\"));\r",
+									"\r",
+									"    pm.expect(pm.response.json().totalprice).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().totalprice).to.not.be.undefined;\r",
+									"    pm.expect(pm.response.json().totalprice).to.be.a('number');\r",
+									"    pm.expect(pm.response.json().totalprice).to.eql(expectedTotalPrice);\r",
+									"    pm.collectionVariables.set(\"totalprice\", pm.response.json().totalprice);\r",
+									"\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check depositpaid is equal to the expected value\", function () {\r",
+									"    pm.expect(pm.response.json().depositpaid).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().depositpaid).to.not.be.undefined;\r",
+									"    pm.expect(typeof pm.response.json().depositpaid).to.be.eql(\"boolean\");\r",
+									"    pm.expect(pm.response.json().depositpaid).to.eql(JSON.parse(pm.request.body.raw).depositpaid)\r",
+									"    pm.collectionVariables.set(\"depositpaid\", pm.response.json().depositpaid);\r",
+									"\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check checkin type is object\", function () {\r",
+									"    pm.expect(pm.response.json().bookingdates.checkin).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().bookingdates.checkin).to.not.be.undefined;\r",
+									"    pm.expect(pm.response.json().bookingdates.checkin).to.be.a('string');\r",
+									"    pm.expect(pm.response.json().bookingdates.checkin).to.eql(pm.variables.get(\"checkin\"));\r",
+									"    pm.collectionVariables.set(\"checkin\", pm.response.json().bookingdates.checkin);\r",
+									"\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check checkout type is object\", function () {\r",
+									"    pm.expect(pm.response.json().bookingdates.checkout).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().bookingdates.checkout).to.not.be.undefined;\r",
+									"    pm.expect(pm.response.json().bookingdates.checkout).to.be.a('string');\r",
+									"    pm.expect(pm.response.json().bookingdates.checkout).to.eql(pm.variables.get(\"checkout\"));\r",
+									"    pm.collectionVariables.set(\"checkout\", pm.response.json().bookingdates.checkout);\r",
+									"\r",
+									"\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check additionalneeds  is exist and not null or undefined and has value\", function () {\r",
+									"    pm.expect(pm.response.json().additionalneeds).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().additionalneeds).to.not.be.undefined;\r",
+									"    pm.expect(pm.response.json().additionalneeds).to.be.a('string');\r",
+									"    pm.expect(pm.response.json().additionalneeds).to.eql(pm.variables.get(\"additionalneeds\"));\r",
+									"    pm.collectionVariables.set(\"additionalneeds\", pm.response.json().additionalneeds);\r",
+									"\r",
+									"\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"function getRandomTotalPrice() {\r",
+									"  const min = 100;\r",
+									"  const max = 900;\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"const totalprice = getRandomTotalPrice();\r",
+									"pm.collectionVariables.set(\"totalprice\", totalprice)\r",
+									"console.log(\"Total Price:\", totalprice);\r",
+									"\r",
+									"///////////////////////////////////////////////////////////////\r",
+									"\r",
+									"function getRandomMeal() {\r",
+									"  const meals = [\"breakfast\", \"lunch\", \"dinner\"];\r",
+									"  const randomIndex = Math.floor(Math.random() * meals.length);\r",
+									"  return meals[randomIndex];\r",
+									"}\r",
+									"\r",
+									"const meal = getRandomMeal();\r",
+									"pm.collectionVariables.set(\"additionalneeds\", meal);\r",
+									"console.log(\"Random Meal:\", meal);\r",
+									"\r",
+									"///////////////////////////////////////////////////////////////\r",
+									"\r",
+									"function getRandomDate(start, end) {\r",
+									"  const date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));\r",
+									"  return date.toISOString().split('T')[0]; // format as YYYY-MM-DD\r",
+									"}\r",
+									"\r",
+									"const startDate = new Date('1990-01-01');\r",
+									"const endDate = new Date('1999-12-30'); // ensure there's space for checkout to be after\r",
+									"const checkin = getRandomDate(startDate, endDate);\r",
+									"\r",
+									"pm.collectionVariables.set(\"checkin\", checkin);\r",
+									"console.log(\"Check-in:\", checkin);\r",
+									"\r",
+									"///////////////////////////////////////////////////////////////\r",
+									"\r",
+									"function getRandomCheckoutDate(checkinStr) {\r",
+									"  const checkin = new Date(checkinStr);\r",
+									"  const nextDay = new Date(checkin);\r",
+									"  nextDay.setDate(checkin.getDate() + 1); // at least 1 day after checkin\r",
+									"\r",
+									"  const endLimit = new Date('1999-12-31');\r",
+									"  if (nextDay > endLimit) return endLimit.toISOString().split('T')[0];\r",
+									"\r",
+									"  const checkout = new Date(nextDay.getTime() + Math.random() * (endLimit.getTime() - nextDay.getTime()));\r",
+									"  return checkout.toISOString().split('T')[0];\r",
+									"}\r",
+									"\r",
+									"const checkinStr = pm.collectionVariables.get(\"checkin\");\r",
+									"const checkout = getRandomCheckoutDate(checkinStr);\r",
+									"\r",
+									"pm.collectionVariables.set(\"checkout\", checkout);\r",
+									"console.log(\"Check-out:\", checkout);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"{{$randomFirstName}}\",\r\n    \"lastname\" : \"{{$randomLastName}}\",\r\n    \"totalprice\" : \"{{totalprice}}\",\r\n    \"depositpaid\" : {{$randomBoolean}},\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"{{checkin}}\",\r\n        \"checkout\" : \"{{checkout}}\"\r\n    },\r\n    \"additionalneeds\" : \"{{additionalneeds}}\"\r\n} ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{URL}}/booking/:id",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"booking",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{bookingid}}",
+									"type": "string"
+								}
+							]
+						},
+						"description": "# Booking - UpdateBooking\n\nUpdates a current booking\n\n  \nUpdates the booking information for a specific booking data.\n\n#### Request Body\n\n- **firstname** (string, required): The first name of the guest.\n    \n- **lastname** (string, required): The last name of the guest.\n    \n- **totalprice** (number, required): The total price of the booking.\n    \n- **depositpaid** (boolean, required): Indicates whether the deposit is paid.\n    \n\n#### Response\n\nThe response schema for this request is as follows:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"bookingid\": {\n      \"type\": \"number\"\n    },\n    \"booking\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"firstname\": {\n          \"type\": \"string\"\n        },\n        \"lastname\": {\n          \"type\": \"string\"\n        },\n        \"totalprice\": {\n          \"type\": \"number\"\n        },\n        \"depositpaid\": {\n          \"type\": \"boolean\"\n        },\n        \"bookingdates\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"checkin\": {\n              \"type\": \"string\",\n              \"format\": \"date\"\n            },\n            \"checkout\": {\n              \"type\": \"string\",\n              \"format\": \"date\"\n            }\n          }\n        },\n        \"additionalneeds\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Booking ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check firstname is equal to the expected value\", function () {\r",
+									"    pm.expect(pm.response.json().firstname).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().firstname).to.not.be.undefined;\r",
+									"    pm.expect(typeof pm.response.json().firstname).to.be.eql(\"string\");\r",
+									"    pm.expect(pm.response.json().firstname).to.eql(pm.collectionVariables.get(\"firstname\"));\r",
+									"\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check lastname is equal to the expected value\", function () {\r",
+									"    pm.expect(pm.response.json().lastname).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().lastname).to.not.be.undefined;\r",
+									"    pm.expect(typeof pm.response.json().lastname).to.be.eql(\"string\");\r",
+									"    pm.expect(pm.response.json().lastname).to.eql(pm.collectionVariables.get(\"lastname\"));\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check bookingdates type is object\", function () {\r",
+									"\r",
+									"    pm.expect(pm.response.json().bookingdates).to.be.an(\"object\");\r",
+									"    pm.expect(pm.response.json().bookingdates).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().bookingdates).to.not.be.undefined;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check totalprice is equal to the expected value\", function () {\r",
+									"    const expectedTotalPrice = parseInt(pm.collectionVariables.get(\"totalprice\"));\r",
+									"\r",
+									"    pm.expect(pm.response.json().totalprice).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().totalprice).to.not.be.undefined;\r",
+									"    pm.expect(pm.response.json().totalprice).to.be.a('number');\r",
+									"    pm.expect(pm.response.json().totalprice).to.eql(pm.collectionVariables.get(\"totalprice\"));\r",
+									"\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check depositpaid is equal to the expected value\", function () {\r",
+									"    pm.expect(pm.response.json().depositpaid).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().depositpaid).to.not.be.undefined;\r",
+									"    pm.expect(typeof pm.response.json().depositpaid).to.be.eql(\"boolean\");\r",
+									"    pm.expect(pm.response.json().depositpaid).to.eql(pm.collectionVariables.get(\"depositpaid\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check checkin type is object\", function () {\r",
+									"    pm.expect(pm.response.json().bookingdates.checkin).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().bookingdates.checkin).to.not.be.undefined;\r",
+									"    pm.expect(pm.response.json().bookingdates.checkin).to.be.a('string');\r",
+									"    pm.expect(pm.response.json().bookingdates.checkin).to.eql(pm.collectionVariables.get(\"checkin\"));\r",
+									"});\r",
+									"pm.test(\"Check checkout type is object\", function () {\r",
+									"    pm.expect(pm.response.json().bookingdates.checkout).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().bookingdates.checkout).to.not.be.undefined;\r",
+									"    pm.expect(pm.response.json().bookingdates.checkout).to.be.a('string');\r",
+									"    pm.expect(pm.response.json().bookingdates.checkout).to.eql(pm.collectionVariables.get(\"checkout\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check additionalneeds  is exist and not null or undefined and has value\", function () {\r",
+									"    pm.expect(pm.response.json().additionalneeds).to.not.be.null;\r",
+									"    pm.expect(pm.response.json().additionalneeds).to.not.be.undefined;\r",
+									"    pm.expect(pm.response.json().additionalneeds).to.be.a('string');\r",
+									"    pm.expect(pm.response.json().additionalneeds).to.eql(pm.collectionVariables.get(\"additionalneeds\"));\r",
+									"\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{URL}}/booking/:id",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"booking",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{bookingid}}"
+								}
+							]
+						},
+						"description": "### Retrieve Booking Details\n\nThis endpoint retrieves the details of a booking based on the provided booking ID.\n\n#### Request\n\n- Method: `GET`\n    \n- URL: `https://{{URL}}/booking/:id`\n    \n\n#### Response\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"bookingid\": {\n      \"type\": \"integer\"\n    },\n    \"booking\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"firstname\": {\n          \"type\": \"string\"\n        },\n        \"lastname\": {\n          \"type\": \"string\"\n        },\n        \"totalprice\": {\n          \"type\": \"integer\"\n        },\n        \"depositpaid\": {\n          \"type\": \"boolean\"\n        },\n        \"bookingdates\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"checkin\": {\n              \"type\": \"string\",\n              \"format\": \"date\"\n            },\n            \"checkout\": {\n              \"type\": \"string\",\n              \"format\": \"date\"\n            }\n          }\n        },\n        \"additionalneeds\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Booking",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Booking ID deleted\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{URL}}/booking/:id",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"booking",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{bookingid}}"
+								}
+							]
+						},
+						"description": "# Booking - DeleteBooking\n\nReturns the ids of all the bookings that exist within the API. Can take optional query strings to search and return a subset of booking ids.\n\n  \nHTTP DELETE /booking/:id\n\nThis endpoint is used to delete a specific booking by providing the booking ID in the URL.\n\n#### Request Body\n\nThis request does not require a request body.\n\n#### Response\n\nThe response will not contain a response body. The status code will indicate the success or failure of the deletion operation."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Booking ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// pm.test(\"Booking ID is not exist anymore\", function () {\r",
+									"//     pm.expect(pm.response.json().bookingid).to.be.not.exist\r",
+									"\r",
+									"// });\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{URL}}/booking/:id",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"booking",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{bookingid}}"
+								}
+							]
+						},
+						"description": "### Retrieve Booking Details\n\nThis API endpoint is used to retrieve the details of a specific booking by providing the booking ID in the URL.\n\n#### Request\n\n- Method: GET\n    \n- URL: `https://{{URL}}/booking/:id`\n    \n- URL Parameters:\n    \n    - `:id` (string) - The unique identifier of the booking.\n        \n\n#### Response\n\nThe response for this request is a JSON object representing the details of the booking. Here is a JSON schema representing the structure of the response:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"bookingid\": {\"type\": \"integer\"},\n    \"booking\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"firstname\": {\"type\": \"string\"},\n        \"lastname\": {\"type\": \"string\"},\n        \"totalprice\": {\"type\": \"integer\"},\n        \"depositpaid\": {\"type\": \"boolean\"},\n        \"bookingdates\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"checkin\": {\"type\": \"string\", \"format\": \"date-time\"},\n            \"checkout\": {\"type\": \"string\", \"format\": \"date-time\"}\n          }\n        },\n        \"additionalneeds\": {\"type\": \"string\"}\n      }\n    },\n    \"additionalinfo\": {\"type\": \"string\"}\n  }\n}\n\n ```"
+					},
+					"response": []
+				}
+			],
+			"description": "# Booking\n\nReturns the ids of all the bookings that exist within the API. Can take optional query strings to search and return a subset of booking ids."
+		},
+		{
+			"name": "Ping",
+			"item": [
+				{
+					"name": "Ping",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://restful-booker.herokuapp.com/ping",
+							"protocol": "https",
+							"host": [
+								"restful-booker",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"ping"
+							]
+						},
+						"description": "Generated from cURL: curl -i https://restful-booker.herokuapp.com/ping\r\n"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "totalprice",
+			"value": ""
+		},
+		{
+			"key": "additionalneeds",
+			"value": ""
+		},
+		{
+			"key": "checkin",
+			"value": ""
+		},
+		{
+			"key": "checkout",
+			"value": ""
+		},
+		{
+			"key": "bookingid",
+			"value": ""
+		},
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "firstname",
+			"value": ""
+		},
+		{
+			"key": "lastname",
+			"value": ""
+		},
+		{
+			"key": "depositpaid",
+			"value": ""
+		}
+	]
+}

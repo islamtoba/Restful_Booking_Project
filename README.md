@@ -26,7 +26,7 @@ Welcome to **Restful Booker**, a lightweight, powerful booking application that 
 ## 🎬 Examples of Run
 
 Take a look at a local execution demo below!  
-![Local Testing Execution Example](Run.gif)
+![Local Testing Execution Example](Rec.gif)
 
 ---
 
@@ -42,32 +42,42 @@ Take a look at a local execution demo below!
 
 ---
 
-## ⚙️ Installation
+## ⚙️ How to Run the Project and Test It with Postman
 
-To set up **Restful Booker** locally, follow these steps:
+To set up and run the **Restful Booker** project locally, and test it using **Postman**, follow these steps:
 
 1. **Clone the repository**  
+   Open your terminal or command prompt and run:
    ```bash
    git clone https://github.com/islamtoba/Restful_Booking_Project
    ```
 
 2. **Navigate to the project directory**  
    ```bash
-   cd restfulBoker
+   cd Restful_Booking_Project
    ```
 
 3. **Install dependencies**  
+   Make sure you have [Node.js](https://nodejs.org/) installed. Then, install the project dependencies:
    ```bash
    npm install
    ```
 
-4. **Configure the application**  
-   Update any necessary settings in the configuration files.
+5. **Import the Postman collection**  
+   - Open [Postman](https://www.postman.com/)
+   - Click on **"Import"** and upload the Postman collection file from the project folder  
+     (look for a file like `Restful_Booker_Collection.json`)
+   - Also import the environment file if available  
+     (e.g., `Restful_Booker_Environment.postman_environment.json`)
 
-5. **Run the application**  
-   ```bash
-   npm start
-   ```
+6. **Set the correct environment in Postman**  
+   - In Postman, choose the imported environment (e.g., `Localhost Environment`) from the top-right dropdown.
+
+7. **Run the requests or the full test collection**  
+   - Go to the imported collection
+   - You can run individual requests or click **"Run Collection"** to execute the full test suite using the Collection Runner.
+
+or click on run.bat becuse it's have the command that will run the collection and create report that you can find in newman folder.
 
 ---
 

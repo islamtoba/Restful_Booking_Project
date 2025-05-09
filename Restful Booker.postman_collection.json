@@ -3,56 +3,70 @@
 		"_postman_id": "763a0ebe-0d50-478c-ad1e-232ca15d6be8",
 		"name": "Restful Booker",
 		"description": "## Restful Booker\n\n<img src=\"https://content.pstmn.io/a7eab71f-6bff-4a03-93ab-b41e2e8eed3b/b2ctaW1hZ2UucG5n\" alt=\"\">\n\n## API documentation for the playground API restful-booker.",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "22921253",
-		"_collection_link": "https://www.postman.com/islamtouba/workspace/xyz/collection/22921253-763a0ebe-0d50-478c-ad1e-232ca15d6be8?action=share&source=collection_link&creator=22921253"
+		"_collection_link": "https://www.postman.com/islamtouba/workspace/restful-booker/collection/22921253-763a0ebe-0d50-478c-ad1e-232ca15d6be8?action=share&source=collection_link&creator=22921253"
 	},
 	"item": [
 		{
-			"name": "Auth",
+			"name": "1- Auth",
 			"item": [
 				{
-					"name": "Create Token",
+					"name": "1.1 Create Token",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
+									"pm.test(\"[1.1] TC01 Validate Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Response time is less than 300ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+									"pm.test(\"[1.1] TC02 Validate Response time is less than 300ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
 									"});\r",
-									"pm.test(\"Check Login response body contain token\", function () {\r",
+									"\r",
+									"\r",
+									"pm.test(\"[1.1] TC08 Validate Response Schema is Valid\", function () {\r",
+									"    var schema = {\r",
+									"        \"type\": \"object\",\r",
+									"        \"properties\": {\r",
+									"            \"token\": { \"type\": \"string\" }\r",
+									"        },\r",
+									"        \"required\": [\"token\"]\r",
+									"    };\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"[1.1] TC03 Validate Check Login response body contain token\", function () {\r",
 									"    pm.expect(pm.response.json()).to.have.property(\"token\")\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check Login response body not contain token\", function(){\r",
+									"pm.test(\"[1.1] TC04 Validate Check Login response body not contain token\", function(){\r",
 									"    pm.expect(pm.response.json()).to.not.have.property(\"Token\")\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check Login response body contain token not null\",function(){\r",
+									"pm.test(\"[1.1] TC05 Validate Check Login response body contain token not null\",function(){\r",
 									"    pm.expect(pm.response.json().token).to.not.be.null\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check Login response body contain token not empty\",function(){\r",
+									"pm.test(\"[1.1] TC06 Validate Check Login response body contain token not empty\",function(){\r",
 									"    pm.expect(pm.response.json().token).to.not.be.undefined\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check Login length is greater than 12  digit\", function () {\r",
+									"pm.test(\"[1.1] TC07 Validate Check Login length is greater than 12  digit\", function () {\r",
 									"    pm.expect(pm.response.json().token.length).to.be.greaterThan(12);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check token type not integer\", function(){\r",
+									"pm.test(\"[1.1] TC08 Validate Check token type not integer\", function(){\r",
 									"pm.expect(typeof pm.response.json().token).to.not.be.equal(\"integer\")\r",
 									"});\r",
 									"\r",
 									"/////////////////////////\r",
+									"pm.test(\"[1.1] TC089 set token to collection variable\", function () {\r",
 									"\r",
 									"pm.collectionVariables.set(\"token\", pm.response.json().token);\r",
-									""
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -84,28 +98,88 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "https://{{URL}}/auth",
-							"protocol": "https",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"auth"
-							]
-						},
-						"description": "# Auth - CreateToken\n\nCreates a new auth token to use for access to the PUT and DELETE /booking\n\n### Authentication Endpoint\n\nThis endpoint allows users to authenticate and obtain access to the system.\n\n#### Request Body\n\n- `username` (string) - The username of the user.\n    \n- `password` (string) - The password of the user.\n    \n\n#### Response\n\nThe response will include the authentication token or an error message in case of invalid credentials or other issues."
+						"url": "{{URL}}/auth",
+						"description": "### 🔐 1. Auth - Create Token\n\nDescription: Creates a new auth token to use for access to the PUT and DELETE /booking.\n\n  \nUse this token to unlock special powers — like updating or deleting bookings (`PUT` and `DELETE /booking`). 🔑✨  \n\n#### 📬 Endpoint\n\n``` bash\nPOST /auth\n\n ```\n\n---\n\n#### 📝 Request Body\n\n``` json\n{\n  \"username\": \"admin\",\n  \"password\": \"password123\"\n}\n\n ```\n\n---\n\n#### 📦 Response\n\n``` json\n{\n  \"token\": \"625026321ce550d\"\n}\n\n ```\n\n---\n\n#### 💻 Example Request (curl)\n\n``` bash\ncurl --location 'https://restful-booker.herokuapp.com/auth' \\\n--header 'Content-Type: application/json' \\\n--data '{\n  \"username\": \"admin\",\n  \"password\": \"password123\"\n}'\n\n\n ```"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "1.1 Create Token",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": " \r\n    {\r\n        \"username\": \"admin\",\r\n        \"password\": \"password123\"\r\n    }\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{URL}}/auth"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Cowboy"
+								},
+								{
+									"key": "Report-To",
+									"value": "{\"group\":\"heroku-nel\",\"max_age\":3600,\"endpoints\":[{\"url\":\"https://nel.heroku.com/reports?ts=1746614365&sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add&s=K0Y138bjnl%2F0l%2F5%2BhJpdp9ltMYj8E%2BD70hc%2BjZuxV90%3D\"}]}"
+								},
+								{
+									"key": "Reporting-Endpoints",
+									"value": "heroku-nel=https://nel.heroku.com/reports?ts=1746614365&sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add&s=K0Y138bjnl%2F0l%2F5%2BhJpdp9ltMYj8E%2BD70hc%2BjZuxV90%3D"
+								},
+								{
+									"key": "Nel",
+									"value": "{\"report_to\":\"heroku-nel\",\"max_age\":3600,\"success_fraction\":0.005,\"failure_fraction\":0.05,\"response_headers\":[\"Via\"]}"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "27"
+								},
+								{
+									"key": "Etag",
+									"value": "W/\"1b-U5DAitI+N1iLNu1iX0Q4hxpLtVw\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 07 May 2025 10:39:25 GMT"
+								},
+								{
+									"key": "Via",
+									"value": "1.1 vegur"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"625026321ce550d\"\n}"
+						}
+					]
 				}
 			],
-			"description": "# Auth - CreateToken\n\nCreates a new auth token to use for access to the PUT and DELETE /booking\n\nEndFragment"
+			"description": "### 🔐 Auth - CreateToken\n\nNeed to update or delete a booking?  \n  \nJust generate your **auth token** here and you’re good to go!  \n  \nThis token gives you secure access to the `PUT` and `DELETE /booking` endpoints. 🎫🔒"
 		},
 		{
-			"name": "Booking",
+			"name": "2- Booking",
 			"item": [
 				{
-					"name": "Create Booking",
+					"name": "2.1 Create Booking",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -162,105 +236,129 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
+									"const jsonData = pm.response.json();\r",
+									"const requestBody = JSON.parse(pm.request.body.raw);\r",
+									"\r",
+									"// Helper to check value existence and type\r",
+									"function validateField(value, expectedType = \"string\") {\r",
+									"    pm.expect(value, \"Should not be null\").to.not.be.null;\r",
+									"    pm.expect(value, \"Should not be undefined\").to.not.be.undefined;\r",
+									"    if (expectedType !== \"boolean\" && expectedType !== \"number\") {\r",
+									"        pm.expect(value, \"Should not be empty\").to.not.be.empty;\r",
+									"    }\r",
+									"    pm.expect(typeof value, `Should be of type ${expectedType}`).to.eql(expectedType);\r",
+									"}\r",
+									"\r",
+									"// [2.1] TC01 - Validate status code\r",
+									"pm.test(\"[2.1] TC01 - Status code is 200\", () => {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"// [2.1] TC02 - Validate response time\r",
+									"pm.test(\"[2.1] TC02 - Response time < 200ms\", () => {\r",
 									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check bookingid not null and not empty and equal number\", function () {\r",
-									"    pm.collectionVariables.set(\"bookingid\", pm.response.json().bookingid);\r",
-									"    pm.expect(pm.response.json().bookingid).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().bookingid).to.not.be.undefined;\r",
-									"    pm.expect(typeof pm.response.json().bookingid).to.be.equal(\"number\");\r",
+									"// [2.1] TC03 - Validate response schema\r",
+									"pm.test(\"[2.1] TC03 - Response matches expected schema\", () => {\r",
+									"    const schema = {\r",
+									"        type: \"object\",\r",
+									"        properties: {\r",
+									"            bookingid: { type: \"integer\" },\r",
+									"            booking: {\r",
+									"                type: \"object\",\r",
+									"                properties: {\r",
+									"                    firstname: { type: \"string\" },\r",
+									"                    lastname: { type: \"string\" },\r",
+									"                    totalprice: { type: \"number\" },\r",
+									"                    depositpaid: { type: \"boolean\" },\r",
+									"                    bookingdates: {\r",
+									"                        type: \"object\",\r",
+									"                        properties: {\r",
+									"                            checkin: { type: \"string\" },\r",
+									"                            checkout: { type: \"string\" }\r",
+									"                        },\r",
+									"                        required: [\"checkin\", \"checkout\"]\r",
+									"                    },\r",
+									"                    additionalneeds: { type: \"string\" }\r",
+									"                },\r",
+									"                required: [\"firstname\", \"lastname\", \"totalprice\", \"depositpaid\", \"bookingdates\"]\r",
+									"            }\r",
+									"        },\r",
+									"        required: [\"bookingid\", \"booking\"]\r",
+									"    };\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check booking type is object and not null or empty\", function () {\r",
-									"    pm.expect(pm.response.json().booking).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().booking).to.not.be.undefined;\r",
-									"    pm.expect(typeof pm.response.json().booking).to.be.equal(\"object\");\r",
+									"// [2.1] TC04 - bookingid is present and a number\r",
+									"pm.test(\"[2.1] TC04 - bookingid is present and a number\", () => {\r",
+									"    validateField(jsonData.bookingid, \"number\");\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check firstname is equal to the expected value\", function () {\r",
-									"    pm.expect(pm.response.json().booking.firstname).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().booking.firstname).to.not.be.undefined;\r",
-									"    pm.expect(typeof pm.response.json().booking.firstname).to.be.eql(\"string\");\r",
-									"    pm.expect(pm.response.json().booking.firstname).to.eql(JSON.parse(pm.request.body.raw).firstname)\r",
-									"    pm.collectionVariables.set(\"firstname\", pm.response.json().booking.firstname);\r",
+									"// [2.1] TC05 - booking object is valid\r",
+									"pm.test(\"[2.1] TC05 - booking object is present and valid\", () => {\r",
+									"    validateField(jsonData.booking, \"object\");\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check lastname is equal to the expected value\", function () {\r",
-									"    pm.expect(pm.response.json().booking.lastname).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().booking.lastname).to.not.be.undefined;\r",
-									"    pm.expect(typeof pm.response.json().booking.lastname).to.be.eql(\"string\");\r",
-									"    pm.expect(pm.response.json().booking.lastname).to.eql(JSON.parse(pm.request.body.raw).lastname)\r",
-									"    pm.collectionVariables.set(\"lastname\", pm.response.json().booking.lastname);\r",
-									"\r",
+									"// [2.1] TC06 - firstname matches expected\r",
+									"pm.test(\"[2.1] TC06 - firstname matches expected value\", () => {\r",
+									"    validateField(jsonData.booking.firstname, \"string\");\r",
+									"    pm.expect(jsonData.booking.firstname).to.eql(requestBody.firstname);\r",
 									"});\r",
 									"\r",
-									"\r",
-									"\r",
-									"pm.test(\"Check bookingdates type is object\", function () {\r",
-									"\r",
-									"    pm.expect(pm.response.json().booking.bookingdates).to.exist;\r",
-									"    pm.expect(pm.response.json().booking.bookingdates).to.be.an(\"object\");\r",
-									"    pm.expect(pm.response.json().booking.bookingdates).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().booking.bookingdates).to.not.be.undefined;\r",
-									"\r",
+									"// [2.1] TC07 - lastname matches expected\r",
+									"pm.test(\"[2.1] TC07 - lastname matches expected value\", () => {\r",
+									"    validateField(jsonData.booking.lastname, \"string\");\r",
+									"    pm.expect(jsonData.booking.lastname).to.eql(requestBody.lastname);\r",
 									"});\r",
 									"\r",
-									"\r",
-									"pm.test(\"Check totalprice is equal to the expected value\", function () {\r",
-									"    const expectedTotalPrice = parseInt(pm.collectionVariables.get(\"totalprice\"));\r",
-									"\r",
-									"    pm.expect(pm.response.json().booking.totalprice).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().booking.totalprice).to.not.be.undefined;\r",
-									"    pm.expect(pm.response.json().booking.totalprice).to.be.a('number');\r",
-									"    pm.expect(pm.response.json().booking.totalprice).to.eql(expectedTotalPrice);\r",
-									"    pm.collectionVariables.set(\"totalprice\", pm.response.json().booking.totalprice);\r",
-									"\r",
+									"// [2.1] TC08 - totalprice matches expected\r",
+									"pm.test(\"[2.1] TC08 - totalprice matches expected value\", () => {\r",
+									"    const expectedPrice = parseInt(pm.collectionVariables.get(\"totalprice\"));\r",
+									"    validateField(jsonData.booking.totalprice, \"number\");\r",
+									"    pm.expect(jsonData.booking.totalprice).to.eql(expectedPrice);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check depositpaid is equal to the expected value\", function () {\r",
-									"    pm.expect(pm.response.json().booking.depositpaid).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().booking.depositpaid).to.not.be.undefined;\r",
-									"    pm.expect(typeof pm.response.json().booking.depositpaid).to.be.eql(\"boolean\");\r",
-									"    pm.expect(pm.response.json().booking.depositpaid).to.eql(JSON.parse(pm.request.body.raw).depositpaid)\r",
-									"    pm.collectionVariables.set(\"depositpaid\", pm.response.json().booking.depositpaid);\r",
-									"\r",
+									"// [2.1] TC09 - depositpaid matches expected\r",
+									"pm.test(\"[2.1] TC09 - depositpaid matches expected value\", () => {\r",
+									"    validateField(jsonData.booking.depositpaid, \"boolean\");\r",
+									"    pm.expect(jsonData.booking.depositpaid).to.eql(requestBody.depositpaid);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check checkin type is object\", function () {\r",
-									"    pm.expect(pm.response.json().booking.bookingdates.checkin).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().booking.bookingdates.checkin).to.not.be.undefined;\r",
-									"    pm.expect(pm.response.json().booking.bookingdates.checkin).to.be.a('string');\r",
-									"    pm.expect(pm.response.json().booking.bookingdates.checkin).to.eql(pm.variables.get(\"checkin\"));\r",
-									"    pm.collectionVariables.set(\"checkin\", pm.response.json().booking.bookingdates.checkin);\r",
-									"\r",
+									"// [2.1] TC10 - bookingdates object is valid\r",
+									"pm.test(\"[2.1] TC10 - bookingdates is an object\", () => {\r",
+									"    validateField(jsonData.booking.bookingdates, \"object\");\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check checkout type is object\", function () {\r",
-									"    pm.expect(pm.response.json().booking.bookingdates.checkout).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().booking.bookingdates.checkout).to.not.be.undefined;\r",
-									"    pm.expect(pm.response.json().booking.bookingdates.checkout).to.be.a('string');\r",
-									"    pm.expect(pm.response.json().booking.bookingdates.checkout).to.eql(pm.variables.get(\"checkout\"));\r",
-									"    pm.collectionVariables.set(\"checkout\", pm.response.json().booking.bookingdates.checkout);\r",
-									"\r",
-									"\r",
+									"// [2.1] TC11 - checkin date matches expected\r",
+									"pm.test(\"[2.1] TC11 - checkin matches expected value\", () => {\r",
+									"    validateField(jsonData.booking.bookingdates.checkin, \"string\");\r",
+									"    pm.expect(jsonData.booking.bookingdates.checkin).to.eql(pm.variables.get(\"checkin\"));\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check additionalneeds  is exist and not null or undefined and has value\", function () {\r",
-									"    pm.expect(pm.response.json().booking.additionalneeds).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().booking.additionalneeds).to.not.be.undefined;\r",
-									"    pm.expect(pm.response.json().booking.additionalneeds).to.be.a('string');\r",
-									"    pm.expect(pm.response.json().booking.additionalneeds).to.eql(pm.variables.get(\"additionalneeds\"));\r",
-									"    pm.collectionVariables.set(\"additionalneeds\", pm.response.json().booking.additionalneeds);\r",
-									"\r",
-									"\r",
+									"// [2.1] TC12 - checkout date matches expected\r",
+									"pm.test(\"[2.1] TC12 - checkout matches expected value\", () => {\r",
+									"    validateField(jsonData.booking.bookingdates.checkout, \"string\");\r",
+									"    pm.expect(jsonData.booking.bookingdates.checkout).to.eql(pm.variables.get(\"checkout\"));\r",
 									"});\r",
 									"\r",
+									"// [2.1] TC13 - additionalneeds matches expected\r",
+									"pm.test(\"[2.1] TC13 - additionalneeds is present and valid\", () => {\r",
+									"    validateField(jsonData.booking.additionalneeds, \"string\");\r",
+									"    pm.expect(jsonData.booking.additionalneeds).to.eql(pm.variables.get(\"additionalneeds\"));\r",
+									"});\r",
+									"\r",
+									"// [2.1] TC14 - Set all collection variables in one place\r",
+									"pm.test(\"[2.1] TC14 - Set collection variables\", () => {\r",
+									"    pm.collectionVariables.set(\"bookingid\", jsonData.bookingid);\r",
+									"    pm.collectionVariables.set(\"firstname\", jsonData.booking.firstname);\r",
+									"    pm.collectionVariables.set(\"lastname\", jsonData.booking.lastname);\r",
+									"    pm.collectionVariables.set(\"totalprice\", jsonData.booking.totalprice);\r",
+									"    pm.collectionVariables.set(\"depositpaid\", jsonData.booking.depositpaid);\r",
+									"    pm.collectionVariables.set(\"checkin\", jsonData.booking.bookingdates.checkin);\r",
+									"    pm.collectionVariables.set(\"checkout\", jsonData.booking.bookingdates.checkout);\r",
+									"    pm.collectionVariables.set(\"additionalneeds\", jsonData.booking.additionalneeds);\r",
+									"});\r",
 									""
 								],
 								"type": "text/javascript",
@@ -280,105 +378,191 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "https://{{URL}}/booking",
-							"protocol": "https",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"booking"
-							]
-						},
-						"description": "# Booking - CreateBooking\n\nCreates a new booking in the API\n\n### Request\n\nThis is an HTTP POST request to create a new booking. The request body should be in raw JSON format and include the following parameters:\n\n- `firstname` (string): The first name of the guest.\n    \n- `lastname` (string): The last name of the guest.\n    \n- `totalprice` (string): The total price of the booking.\n    \n- `depositpaid` (object): Whether the deposit is paid or not.\n    \n\n### Response\n\nThe response of this request is a JSON schema. It will include the schema for the booking details."
+						"url": "{{URL}}/booking",
+						"description": "### 🛏️ Booking - Create a Booking\n\nCreates a new booking in the API Request.  \nThis is an HTTP POST request to create a new booking. The request body should be in raw JSON format 📋✨\n\n---\n\n#### 📬 Endpoint\n\n``` bash\nPOST /booking\n\n ```\n\n---\n\n#### 📝 Request Body (JSON)\n\nSend a JSON object with the following fields:\n\n``` json\n{\n  \"firstname\": \"John\",\n  \"lastname\": \"Doe\",\n  \"totalprice\": 150,\n  \"depositpaid\": true,\n  \"bookingdates\": {\n    \"checkin\": \"2025-05-08\",\n    \"checkout\": \"2025-05-12\"\n  },\n  \"additionalneeds\": \"Breakfast\"\n}\n\n ```\n\n**Fields:**\n\n- `firstname` (string): Guest's first name\n    \n- `lastname` (string): Guest's last name\n    \n- `totalprice` (number): Total booking price\n    \n- `depositpaid` (boolean): Whether the deposit is paid\n    \n- `bookingdates` (object): Includes `checkin` and `checkout` dates\n    \n- `additionalneeds` (string): Any extra requests (e.g., \"Breakfast\", \"Late checkout\")\n    \n\n---\n\n#### 📦 Response\n\nA successful response returns a JSON object with the booking ID and booking details:\n\n``` json\n{\n  \"bookingid\": 1234,\n  \"booking\": {\n    \"firstname\": \"John\",\n    \"lastname\": \"Doe\",\n    \"totalprice\": 150,\n    \"depositpaid\": true,\n    \"bookingdates\": {\n      \"checkin\": \"2025-05-08\",\n      \"checkout\": \"2025-05-12\"\n    },\n    \"additionalneeds\": \"Breakfast\"\n  }\n}\n\n ```\n\n---\n\n📅 **Time to book it and bring in those guests!** 🛎️"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "2.1 Create Booking",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"firstname\" : \"{{$randomFirstName}}\",\r\n    \"lastname\" : \"{{$randomLastName}}\",\r\n    \"totalprice\" : \"{{totalprice}}\",\r\n    \"depositpaid\" : {{$randomBoolean}},\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"{{checkin}}\",\r\n        \"checkout\" : \"{{checkout}}\"\r\n    },\r\n    \"additionalneeds\" : \"{{additionalneeds}}\"\r\n} ",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{URL}}/booking"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Cowboy"
+								},
+								{
+									"key": "Report-To",
+									"value": "{\"group\":\"heroku-nel\",\"max_age\":3600,\"endpoints\":[{\"url\":\"https://nel.heroku.com/reports?ts=1746614367&sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add&s=X3%2Biaos%2BEhReNRu674jqhnJtG5rl1u9IhGHigmBInXs%3D\"}]}"
+								},
+								{
+									"key": "Reporting-Endpoints",
+									"value": "heroku-nel=https://nel.heroku.com/reports?ts=1746614367&sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add&s=X3%2Biaos%2BEhReNRu674jqhnJtG5rl1u9IhGHigmBInXs%3D"
+								},
+								{
+									"key": "Nel",
+									"value": "{\"report_to\":\"heroku-nel\",\"max_age\":3600,\"success_fraction\":0.005,\"failure_fraction\":0.05,\"response_headers\":[\"Via\"]}"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "200"
+								},
+								{
+									"key": "Etag",
+									"value": "W/\"c8-+EkxdkgBNcQYk7E3XGE+qx/6k10\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 07 May 2025 10:39:27 GMT"
+								},
+								{
+									"key": "Via",
+									"value": "1.1 vegur"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"bookingid\": 4185,\n    \"booking\": {\n        \"firstname\": \"Kacie\",\n        \"lastname\": \"Bahringer\",\n        \"totalprice\": 802,\n        \"depositpaid\": false,\n        \"bookingdates\": {\n            \"checkin\": \"1990-10-05\",\n            \"checkout\": \"1991-05-08\"\n        },\n        \"additionalneeds\": \"lunch\"\n    }\n}"
+						}
+					]
 				},
 				{
-					"name": "Get Booking ID",
+					"name": "2.2 Get Booking ID",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
+									"var data = pm.response.json();\r",
+									"\r",
+									"// Helper to validate field existence and type\r",
+									"function validateField(value, expectedType = \"string\") {\r",
+									"    pm.expect(value, \"Should not be null\").to.not.be.null;\r",
+									"    pm.expect(value, \"Should not be undefined\").to.not.be.undefined;\r",
+									"    if (expectedType !== \"boolean\" && expectedType !== \"number\") {\r",
+									"        pm.expect(value, \"Should not be empty\").to.not.be.empty;\r",
+									"    }\r",
+									"    pm.expect(typeof value, `Should be of type ${expectedType}`).to.eql(expectedType);\r",
+									"}\r",
+									"\r",
+									"// [2.2] TC01 - Validate status code is 200\r",
+									"pm.test(\"[2.2] TC01 - Validate status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"// [2.2] TC02 - Validate response time is < 200ms\r",
+									"pm.test(\"[2.2] TC02 - Validate response time is less than 200ms\", function () {\r",
 									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
 									"});\r",
 									"\r",
-									"\r",
-									"pm.test(\"Check firstname is equal to the expected value\", function () {\r",
-									"    pm.expect(pm.response.json().firstname).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().firstname).to.not.be.undefined;\r",
-									"    pm.expect(typeof pm.response.json().firstname).to.be.eql(\"string\");\r",
-									"    pm.expect(pm.response.json().firstname).to.eql(pm.collectionVariables.get(\"firstname\"));\r",
-									"\r",
+									"// [2.2] TC03 - Validate response schema is valid\r",
+									"pm.test(\"[2.2] TC03 - Validate response schema is valid\", function () {\r",
+									"    const schema = {\r",
+									"        type: \"object\",\r",
+									"        properties: {\r",
+									"            firstname: { type: \"string\" },\r",
+									"            lastname: { type: \"string\" },\r",
+									"            totalprice: { type: \"number\" },\r",
+									"            depositpaid: { type: \"boolean\" },\r",
+									"            bookingdates: {\r",
+									"                type: \"object\",\r",
+									"                properties: {\r",
+									"                    checkin: { type: \"string\" },\r",
+									"                    checkout: { type: \"string\" }\r",
+									"                },\r",
+									"                required: [\"checkin\", \"checkout\"]\r",
+									"            },\r",
+									"            additionalneeds: { type: \"string\" }\r",
+									"        },\r",
+									"        required: [\"firstname\", \"lastname\", \"totalprice\", \"depositpaid\", \"bookingdates\", \"additionalneeds\"]\r",
+									"    };\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check lastname is equal to the expected value\", function () {\r",
-									"    pm.expect(pm.response.json().lastname).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().lastname).to.not.be.undefined;\r",
-									"    pm.expect(typeof pm.response.json().lastname).to.be.eql(\"string\");\r",
-									"    pm.expect(pm.response.json().lastname).to.eql(pm.collectionVariables.get(\"lastname\"));\r",
+									"// [2.2] TC04 - Validate firstname\r",
+									"pm.test(\"[2.2] TC04 - Validate firstname is correct\", function () {\r",
+									"    validateField(data.firstname, \"string\");\r",
+									"    pm.expect(data.firstname).to.eql(pm.collectionVariables.get(\"firstname\"));\r",
 									"});\r",
 									"\r",
-									"\r",
-									"\r",
-									"pm.test(\"Check bookingdates type is object\", function () {\r",
-									"\r",
-									"    pm.expect(pm.response.json().bookingdates).to.be.an(\"object\");\r",
-									"    pm.expect(pm.response.json().bookingdates).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().bookingdates).to.not.be.undefined;\r",
+									"// [2.2] TC05 - Validate lastname\r",
+									"pm.test(\"[2.2] TC05 - Validate lastname is correct\", function () {\r",
+									"    validateField(data.lastname, \"string\");\r",
+									"    pm.expect(data.lastname).to.eql(pm.collectionVariables.get(\"lastname\"));\r",
 									"});\r",
 									"\r",
-									"\r",
-									"pm.test(\"Check totalprice is equal to the expected value\", function () {\r",
-									"    const expectedTotalPrice = parseInt(pm.collectionVariables.get(\"totalprice\"));\r",
-									"\r",
-									"    pm.expect(pm.response.json().totalprice).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().totalprice).to.not.be.undefined;\r",
-									"    pm.expect(pm.response.json().totalprice).to.be.a('number');\r",
-									"    pm.expect(pm.response.json().totalprice).to.eql(pm.collectionVariables.get(\"totalprice\"));\r",
-									"\r",
+									"// [2.2] TC06 - Validate totalprice\r",
+									"pm.test(\"[2.2] TC06 - Validate totalprice is correct\", function () {\r",
+									"    validateField(data.totalprice, \"number\");\r",
+									"    const expected = parseInt(pm.collectionVariables.get(\"totalprice\"));\r",
+									"    pm.expect(data.totalprice).to.eql(expected);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check depositpaid is equal to the expected value\", function () {\r",
-									"    pm.expect(pm.response.json().depositpaid).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().depositpaid).to.not.be.undefined;\r",
-									"    pm.expect(typeof pm.response.json().depositpaid).to.be.eql(\"boolean\");\r",
-									"    pm.expect(pm.response.json().depositpaid).to.eql(pm.collectionVariables.get(\"depositpaid\"));\r",
+									"// [2.2] TC07 - Validate depositpaid\r",
+									"pm.test(\"[2.2] TC07 - Validate depositpaid is correct\", function () {\r",
+									"    validateField(data.depositpaid, \"boolean\");\r",
+									"    pm.expect(data.depositpaid).to.eql(pm.collectionVariables.get(\"depositpaid\"));\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check checkin type is object\", function () {\r",
-									"    pm.expect(pm.response.json().bookingdates.checkin).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().bookingdates.checkin).to.not.be.undefined;\r",
-									"    pm.expect(pm.response.json().bookingdates.checkin).to.be.a('string');\r",
-									"    pm.expect(pm.response.json().bookingdates.checkin).to.eql(pm.collectionVariables.get(\"checkin\"));\r",
-									"});\r",
-									"pm.test(\"Check checkout type is object\", function () {\r",
-									"    pm.expect(pm.response.json().bookingdates.checkout).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().bookingdates.checkout).to.not.be.undefined;\r",
-									"    pm.expect(pm.response.json().bookingdates.checkout).to.be.a('string');\r",
-									"    pm.expect(pm.response.json().bookingdates.checkout).to.eql(pm.collectionVariables.get(\"checkout\"));\r",
+									"// [2.2] TC08 - Validate bookingdates object\r",
+									"pm.test(\"[2.2] TC08 - Validate bookingdates is an object\", function () {\r",
+									"    validateField(data.bookingdates, \"object\");\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check additionalneeds  is exist and not null or undefined and has value\", function () {\r",
-									"    pm.expect(pm.response.json().additionalneeds).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().additionalneeds).to.not.be.undefined;\r",
-									"    pm.expect(pm.response.json().additionalneeds).to.be.a('string');\r",
-									"    pm.expect(pm.response.json().additionalneeds).to.eql(pm.collectionVariables.get(\"additionalneeds\"));\r",
-									"\r",
+									"// [2.2] TC09 - Validate checkin\r",
+									"pm.test(\"[2.2] TC09 - Validate checkin is correct\", function () {\r",
+									"    validateField(data.bookingdates.checkin, \"string\");\r",
+									"    pm.expect(data.bookingdates.checkin).to.eql(pm.collectionVariables.get(\"checkin\"));\r",
 									"});\r",
 									"\r",
+									"// [2.2] TC10 - Validate checkout\r",
+									"pm.test(\"[2.2] TC10 - Validate checkout is correct\", function () {\r",
+									"    validateField(data.bookingdates.checkout, \"string\");\r",
+									"    pm.expect(data.bookingdates.checkout).to.eql(pm.collectionVariables.get(\"checkout\"));\r",
+									"});\r",
 									"\r",
-									"\r",
+									"// [2.2] TC11 - Validate additionalneeds\r",
+									"pm.test(\"[2.2] TC11 - Validate additionalneeds is correct\", function () {\r",
+									"    validateField(data.additionalneeds, \"string\");\r",
+									"    pm.expect(data.additionalneeds).to.eql(pm.collectionVariables.get(\"additionalneeds\"));\r",
+									"});\r",
 									""
 								],
 								"type": "text/javascript",
 								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -404,8 +588,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{URL}}/booking/:id",
-							"protocol": "https",
+							"raw": "{{URL}}/booking/:id",
 							"host": [
 								"{{URL}}"
 							],
@@ -420,104 +603,212 @@
 								}
 							]
 						},
-						"description": "# Booking - GetBooking\n\nReturns a specific booking based upon the booking id provided  \n  \nThis API endpoint makes an HTTP GET request to retrieve the details of a specific booking identified by the provided ID. The request URL should be in the format https://{{URL}}/booking/:id, where :id is the unique identifier of the booking.\n\n### Request Body\n\nThis request does not require a request body.\n\n### Response Body\n\nThe response will include the details of the booking identified by the provided ID. The response body will contain information such as the booking ID, booking dates, room details, and additional guest information."
+						"description": "### 🔍 Booking - GetBooking\n\nReturns a specific booking based upon the booking id provided .\n\n  \nThis API endpoint makes an HTTP GET request to retrieve the details of a specific booking identified by the provided ID.  \n\n#### 📬 Endpoint\n\nThis API makes an HTTP `GET` request to retrieve details for a specific booking.\n\n**Format:**\n\n``` bash\nGET https://{{URL}}/booking/:id\n\n ```\n\nReplace `:id` with the unique identifier of the booking you're trying to retrieve.\n\n---\n\n#### 📭 Request Body\n\nNo request body is needed — just the booking ID in the URL. 🧾\n\n---\n\n#### 📦 Response Body\n\nA successful response will return all the details related to the booking ID you provided — including booking dates, guest names, price, and any additional needs. 🛏️💼\n\n---\n\n#### 🧾 Response Body (JSON Schema)\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"firstname\": {\n      \"type\": \"string\"\n    },\n    \"lastname\": {\n      \"type\": \"string\"\n    },\n    \"totalprice\": {\n      \"type\": \"number\"\n    },\n    \"depositpaid\": {\n      \"type\": \"boolean\"\n    },\n    \"bookingdates\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"checkin\": {\n          \"type\": \"string\"\n        },\n        \"checkout\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"additionalneeds\": {\n      \"type\": \"string\"\n    }\n  }\n}\n\n ```\n\n---\n\nWant to double-check a booking? Just plug in the ID and you're all set! 🔎📄"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "2.2 Get Booking ID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "token={{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/booking/:id",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"booking",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{bookingid}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Cowboy"
+								},
+								{
+									"key": "Report-To",
+									"value": "{\"group\":\"heroku-nel\",\"max_age\":3600,\"endpoints\":[{\"url\":\"https://nel.heroku.com/reports?ts=1746614370&sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add&s=EMx9wj1ARHmZmZFppLZAsOynNTXTrxqin7tkrAFPEOw%3D\"}]}"
+								},
+								{
+									"key": "Reporting-Endpoints",
+									"value": "heroku-nel=https://nel.heroku.com/reports?ts=1746614370&sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add&s=EMx9wj1ARHmZmZFppLZAsOynNTXTrxqin7tkrAFPEOw%3D"
+								},
+								{
+									"key": "Nel",
+									"value": "{\"report_to\":\"heroku-nel\",\"max_age\":3600,\"success_fraction\":0.005,\"failure_fraction\":0.05,\"response_headers\":[\"Via\"]}"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "171"
+								},
+								{
+									"key": "Etag",
+									"value": "W/\"ab-5VXAYCxpa3XHS4aAO6s/P9wn9Po\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 07 May 2025 10:39:30 GMT"
+								},
+								{
+									"key": "Via",
+									"value": "1.1 vegur"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"firstname\": \"Kacie\",\n    \"lastname\": \"Bahringer\",\n    \"totalprice\": 802,\n    \"depositpaid\": false,\n    \"bookingdates\": {\n        \"checkin\": \"1990-10-05\",\n        \"checkout\": \"1991-05-08\"\n    },\n    \"additionalneeds\": \"lunch\"\n}"
+						}
+					]
 				},
 				{
-					"name": "Update Booking Data",
+					"name": "2.3 Update Booking Data",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
+									"const jsonData = pm.response.json();\r",
+									"const requestBody = JSON.parse(pm.request.body.raw);\r",
+									"\r",
+									"// Helper function for validation\r",
+									"function validateField(value, expectedType = \"string\") {\r",
+									"    pm.expect(value, \"Should not be null\").to.not.be.null;\r",
+									"    pm.expect(value, \"Should not be undefined\").to.not.be.undefined;\r",
+									"    if (expectedType !== \"boolean\" && expectedType !== \"number\") {\r",
+									"        pm.expect(value, \"Should not be empty\").to.not.be.empty;\r",
+									"    }\r",
+									"    pm.expect(typeof value, `Should be of type ${expectedType}`).to.eql(expectedType);\r",
+									"}\r",
+									"\r",
+									"// [2.3] TC01 - Validate Status code is 200\r",
+									"pm.test(\"[2.3] TC01 - Validate Status code is 200\", () => {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"// [2.3] TC02 - Validate Response time is less than 200ms\r",
+									"pm.test(\"[2.3] TC02 - Validate Response time is less than 200ms\", () => {\r",
 									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
 									"});\r",
 									"\r",
-									"\r",
-									"pm.test(\"Check firstname is equal to the expected value\", function () {\r",
-									"    pm.expect(pm.response.json().firstname).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().firstname).to.not.be.undefined;\r",
-									"    pm.expect(typeof pm.response.json().firstname).to.be.eql(\"string\");\r",
-									"    pm.expect(pm.response.json().firstname).to.eql(JSON.parse(pm.request.body.raw).firstname)\r",
-									"    pm.collectionVariables.set(\"firstname\", pm.response.json().firstname);\r",
+									"// [2.3] TC03 - Validate Response Schema is Valid\r",
+									"pm.test(\"[2.3] TC03 - Validate Response Schema is Valid\", () => {\r",
+									"    const schema = {\r",
+									"        type: \"object\",\r",
+									"        properties: {\r",
+									"            firstname: { type: \"string\" },\r",
+									"            lastname: { type: \"string\" },\r",
+									"            totalprice: { type: \"number\" },\r",
+									"            depositpaid: { type: \"boolean\" },\r",
+									"            bookingdates: {\r",
+									"                type: \"object\",\r",
+									"                properties: {\r",
+									"                    checkin: { type: \"string\" },\r",
+									"                    checkout: { type: \"string\" }\r",
+									"                },\r",
+									"                required: [\"checkin\", \"checkout\"]\r",
+									"            },\r",
+									"            additionalneeds: { type: \"string\" }\r",
+									"        },\r",
+									"        required: [\"firstname\", \"lastname\", \"totalprice\", \"depositpaid\", \"bookingdates\"]\r",
+									"    };\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check lastname is equal to the expected value\", function () {\r",
-									"    pm.expect(pm.response.json().lastname).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().lastname).to.not.be.undefined;\r",
-									"    pm.expect(typeof pm.response.json().lastname).to.be.eql(\"string\");\r",
-									"    pm.expect(pm.response.json().lastname).to.eql(JSON.parse(pm.request.body.raw).lastname)\r",
-									"    pm.collectionVariables.set(\"lastname\", pm.response.json().lastname);\r",
-									"\r",
+									"// [2.3] TC04 - Validate firstname matches expected value\r",
+									"pm.test(\"[2.3] TC04 - Validate firstname matches expected value\", () => {\r",
+									"    validateField(jsonData.firstname, \"string\");\r",
+									"    pm.expect(jsonData.firstname).to.eql(requestBody.firstname);\r",
 									"});\r",
 									"\r",
-									"\r",
-									"\r",
-									"pm.test(\"Check bookingdates type is object\", function () {\r",
-									"\r",
-									"    pm.expect(pm.response.json().bookingdates).to.exist;\r",
-									"    pm.expect(pm.response.json().bookingdates).to.be.an(\"object\");\r",
-									"    pm.expect(pm.response.json().bookingdates).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().bookingdates).to.not.be.undefined;\r",
-									"\r",
+									"// [2.3] TC05 - Validate lastname matches expected value\r",
+									"pm.test(\"[2.3] TC05 - Validate lastname matches expected value\", () => {\r",
+									"    validateField(jsonData.lastname, \"string\");\r",
+									"    pm.expect(jsonData.lastname).to.eql(requestBody.lastname);\r",
 									"});\r",
 									"\r",
-									"\r",
-									"pm.test(\"Check totalprice is equal to the expected value\", function () {\r",
-									"    const expectedTotalPrice = parseInt(pm.collectionVariables.get(\"totalprice\"));\r",
-									"\r",
-									"    pm.expect(pm.response.json().totalprice).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().totalprice).to.not.be.undefined;\r",
-									"    pm.expect(pm.response.json().totalprice).to.be.a('number');\r",
-									"    pm.expect(pm.response.json().totalprice).to.eql(expectedTotalPrice);\r",
-									"    pm.collectionVariables.set(\"totalprice\", pm.response.json().totalprice);\r",
-									"\r",
+									"// [2.3] TC06 - Validate bookingdates is an object\r",
+									"pm.test(\"[2.3] TC06 - Validate bookingdates is an object\", () => {\r",
+									"    validateField(jsonData.bookingdates, \"object\");\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check depositpaid is equal to the expected value\", function () {\r",
-									"    pm.expect(pm.response.json().depositpaid).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().depositpaid).to.not.be.undefined;\r",
-									"    pm.expect(typeof pm.response.json().depositpaid).to.be.eql(\"boolean\");\r",
-									"    pm.expect(pm.response.json().depositpaid).to.eql(JSON.parse(pm.request.body.raw).depositpaid)\r",
-									"    pm.collectionVariables.set(\"depositpaid\", pm.response.json().depositpaid);\r",
-									"\r",
+									"// [2.3] TC07 - Validate totalprice matches expected value\r",
+									"pm.test(\"[2.3] TC07 - Validate totalprice matches expected value\", () => {\r",
+									"    const expectedPrice = parseInt(pm.collectionVariables.get(\"totalprice\"));\r",
+									"    validateField(jsonData.totalprice, \"number\");\r",
+									"    pm.expect(jsonData.totalprice).to.eql(expectedPrice);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check checkin type is object\", function () {\r",
-									"    pm.expect(pm.response.json().bookingdates.checkin).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().bookingdates.checkin).to.not.be.undefined;\r",
-									"    pm.expect(pm.response.json().bookingdates.checkin).to.be.a('string');\r",
-									"    pm.expect(pm.response.json().bookingdates.checkin).to.eql(pm.variables.get(\"checkin\"));\r",
-									"    pm.collectionVariables.set(\"checkin\", pm.response.json().bookingdates.checkin);\r",
-									"\r",
+									"// [2.3] TC08 - Validate depositpaid matches expected value\r",
+									"pm.test(\"[2.3] TC08 - Validate depositpaid matches expected value\", () => {\r",
+									"    validateField(jsonData.depositpaid, \"boolean\");\r",
+									"    pm.expect(jsonData.depositpaid).to.eql(requestBody.depositpaid);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check checkout type is object\", function () {\r",
-									"    pm.expect(pm.response.json().bookingdates.checkout).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().bookingdates.checkout).to.not.be.undefined;\r",
-									"    pm.expect(pm.response.json().bookingdates.checkout).to.be.a('string');\r",
-									"    pm.expect(pm.response.json().bookingdates.checkout).to.eql(pm.variables.get(\"checkout\"));\r",
-									"    pm.collectionVariables.set(\"checkout\", pm.response.json().bookingdates.checkout);\r",
-									"\r",
-									"\r",
+									"// [2.3] TC09 - Validate checkin matches expected value\r",
+									"pm.test(\"[2.3] TC09 - Validate checkin matches expected value\", () => {\r",
+									"    validateField(jsonData.bookingdates.checkin, \"string\");\r",
+									"    pm.expect(jsonData.bookingdates.checkin).to.eql(pm.variables.get(\"checkin\"));\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check additionalneeds  is exist and not null or undefined and has value\", function () {\r",
-									"    pm.expect(pm.response.json().additionalneeds).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().additionalneeds).to.not.be.undefined;\r",
-									"    pm.expect(pm.response.json().additionalneeds).to.be.a('string');\r",
-									"    pm.expect(pm.response.json().additionalneeds).to.eql(pm.variables.get(\"additionalneeds\"));\r",
-									"    pm.collectionVariables.set(\"additionalneeds\", pm.response.json().additionalneeds);\r",
-									"\r",
-									"\r",
+									"// [2.3] TC10 - Validate checkout matches expected value\r",
+									"pm.test(\"[2.3] TC10 - Validate checkout matches expected value\", () => {\r",
+									"    validateField(jsonData.bookingdates.checkout, \"string\");\r",
+									"    pm.expect(jsonData.bookingdates.checkout).to.eql(pm.variables.get(\"checkout\"));\r",
 									"});\r",
 									"\r",
+									"// [2.3] TC11 - Validate additionalneeds is present and valid\r",
+									"pm.test(\"[2.3] TC11 - Validate additionalneeds is present and valid\", () => {\r",
+									"    validateField(jsonData.additionalneeds, \"string\");\r",
+									"    pm.expect(jsonData.additionalneeds).to.eql(pm.variables.get(\"additionalneeds\"));\r",
+									"});\r",
+									"\r",
+									"// [2.3] TC12 - Set all collection variables\r",
+									"pm.test(\"[2.3] TC12 - Set all response values as collection variables\", () => {\r",
+									"    pm.collectionVariables.set(\"firstname\", jsonData.firstname);\r",
+									"    pm.collectionVariables.set(\"lastname\", jsonData.lastname);\r",
+									"    pm.collectionVariables.set(\"totalprice\", jsonData.totalprice);\r",
+									"    pm.collectionVariables.set(\"depositpaid\", jsonData.depositpaid);\r",
+									"    pm.collectionVariables.set(\"checkin\", jsonData.bookingdates.checkin);\r",
+									"    pm.collectionVariables.set(\"checkout\", jsonData.bookingdates.checkout);\r",
+									"    pm.collectionVariables.set(\"additionalneeds\", jsonData.additionalneeds);\r",
+									"});\r",
 									""
 								],
 								"type": "text/javascript",
@@ -593,10 +884,6 @@
 						"method": "PUT",
 						"header": [
 							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
 								"key": "Accept",
 								"value": "application/json"
 							},
@@ -615,8 +902,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{URL}}/booking/:id",
-							"protocol": "https",
+							"raw": "{{URL}}/booking/:id",
 							"host": [
 								"{{URL}}"
 							],
@@ -632,91 +918,215 @@
 								}
 							]
 						},
-						"description": "# Booking - UpdateBooking\n\nUpdates a current booking\n\n  \nUpdates the booking information for a specific booking data.\n\n#### Request Body\n\n- **firstname** (string, required): The first name of the guest.\n    \n- **lastname** (string, required): The last name of the guest.\n    \n- **totalprice** (number, required): The total price of the booking.\n    \n- **depositpaid** (boolean, required): Indicates whether the deposit is paid.\n    \n\n#### Response\n\nThe response schema for this request is as follows:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"bookingid\": {\n      \"type\": \"number\"\n    },\n    \"booking\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"firstname\": {\n          \"type\": \"string\"\n        },\n        \"lastname\": {\n          \"type\": \"string\"\n        },\n        \"totalprice\": {\n          \"type\": \"number\"\n        },\n        \"depositpaid\": {\n          \"type\": \"boolean\"\n        },\n        \"bookingdates\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"checkin\": {\n              \"type\": \"string\",\n              \"format\": \"date\"\n            },\n            \"checkout\": {\n              \"type\": \"string\",\n              \"format\": \"date\"\n            }\n          }\n        },\n        \"additionalneeds\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}\n\n ```"
+						"description": "### ✏️ Booking - UpdateBooking\n\nThis endpoint lets you **update an existing booking** with new guest info, updated dates, or even extra needs like breakfast or a late checkout. 🧳🛎️\n\n---\n\n#### 📬 Endpoint\n\nReplace `:id` with the unique ID of the booking you'd like to update.\n\n---\n\n#### 📝 Request Body\n\nThe request should include the full set of booking details in JSON format:\n\n**Fields:**\n\n| Field | Type | Required | Description |\n| --- | --- | --- | --- |\n| `firstname` | string | ✅ | Guest’s first name |\n| `lastname` | string | ✅ | Guest’s last name |\n| `totalprice` | number | ✅ | Total price for the booking |\n| `depositpaid` | boolean | ✅ | Indicates if the deposit has been paid |\n| `bookingdates` | object | ✅ | Includes `checkin` and `checkout` dates |\n| `additionalneeds` | string | ❌ | Optional special requests |\n\n---\n\n#### 📦 Response\n\nUpon success, the response will confirm the updated booking details, including the booking ID and the new data:\n\n---\n\n📋 **Need to fix a name, change dates, or update a price?** This endpoint makes it smooth and simple to keep your bookings up-to-date! ✅🗓️"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "2.3 Update Booking Data",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Cookie",
+										"value": "token={{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"firstname\" : \"{{$randomFirstName}}\",\r\n    \"lastname\" : \"{{$randomLastName}}\",\r\n    \"totalprice\" : \"{{totalprice}}\",\r\n    \"depositpaid\" : {{$randomBoolean}},\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"{{checkin}}\",\r\n        \"checkout\" : \"{{checkout}}\"\r\n    },\r\n    \"additionalneeds\" : \"{{additionalneeds}}\"\r\n} ",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/booking/:id",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"booking",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{bookingid}}",
+											"type": "string"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Cowboy"
+								},
+								{
+									"key": "Report-To",
+									"value": "{\"group\":\"heroku-nel\",\"max_age\":3600,\"endpoints\":[{\"url\":\"https://nel.heroku.com/reports?ts=1746614372&sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add&s=obJxKfxEBBEji5BW3Bu4tFBT8MfCPOo%2FTduygW9%2F5pU%3D\"}]}"
+								},
+								{
+									"key": "Reporting-Endpoints",
+									"value": "heroku-nel=https://nel.heroku.com/reports?ts=1746614372&sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add&s=obJxKfxEBBEji5BW3Bu4tFBT8MfCPOo%2FTduygW9%2F5pU%3D"
+								},
+								{
+									"key": "Nel",
+									"value": "{\"report_to\":\"heroku-nel\",\"max_age\":3600,\"success_fraction\":0.005,\"failure_fraction\":0.05,\"response_headers\":[\"Via\"]}"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "166"
+								},
+								{
+									"key": "Etag",
+									"value": "W/\"a6-KSDkFykb64giOO+mKGH1oUeUHZU\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 07 May 2025 10:39:32 GMT"
+								},
+								{
+									"key": "Via",
+									"value": "1.1 vegur"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"firstname\": \"Kiley\",\n    \"lastname\": \"Bayer\",\n    \"totalprice\": 447,\n    \"depositpaid\": true,\n    \"bookingdates\": {\n        \"checkin\": \"1993-07-18\",\n        \"checkout\": \"1998-07-11\"\n    },\n    \"additionalneeds\": \"lunch\"\n}"
+						}
+					]
 				},
 				{
-					"name": "Get Booking ID",
+					"name": "2.4 Get Booking ID",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
+									"var data = pm.response.json();\r",
+									"\r",
+									"// Helper function to validate field existence and type\r",
+									"function validateField(value, expectedType = \"string\") {\r",
+									"    pm.expect(value, \"Should not be null\").to.not.be.null;\r",
+									"    pm.expect(value, \"Should not be undefined\").to.not.be.undefined;\r",
+									"    if (expectedType !== \"boolean\" && expectedType !== \"number\") {\r",
+									"        pm.expect(value, \"Should not be empty\").to.not.be.empty;\r",
+									"    }\r",
+									"    pm.expect(typeof value, `Should be of type ${expectedType}`).to.eql(expectedType);\r",
+									"}\r",
+									"\r",
+									"// [2.4] TC01 - Validate status code is 200\r",
+									"pm.test(\"[2.4] TC01 - Validate status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"// [2.4] TC02 - Validate response time is < 200ms\r",
+									"pm.test(\"[2.4] TC02 - Validate response time is less than 200ms\", function () {\r",
 									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
 									"});\r",
 									"\r",
-									"\r",
-									"pm.test(\"Check firstname is equal to the expected value\", function () {\r",
-									"    pm.expect(pm.response.json().firstname).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().firstname).to.not.be.undefined;\r",
-									"    pm.expect(typeof pm.response.json().firstname).to.be.eql(\"string\");\r",
-									"    pm.expect(pm.response.json().firstname).to.eql(pm.collectionVariables.get(\"firstname\"));\r",
-									"\r",
+									"// [2.4] TC03 - Validate response schema is valid\r",
+									"pm.test(\"[2.4] TC03 - Validate response schema is valid\", function () {\r",
+									"    const schema = {\r",
+									"        type: \"object\",\r",
+									"        properties: {\r",
+									"            firstname: { type: \"string\" },\r",
+									"            lastname: { type: \"string\" },\r",
+									"            totalprice: { type: \"number\" },\r",
+									"            depositpaid: { type: \"boolean\" },\r",
+									"            bookingdates: {\r",
+									"                type: \"object\",\r",
+									"                properties: {\r",
+									"                    checkin: { type: \"string\" },\r",
+									"                    checkout: { type: \"string\" }\r",
+									"                },\r",
+									"                required: [\"checkin\", \"checkout\"]\r",
+									"            },\r",
+									"            additionalneeds: { type: \"string\" }\r",
+									"        },\r",
+									"        required: [\"firstname\", \"lastname\", \"totalprice\", \"depositpaid\", \"bookingdates\", \"additionalneeds\"]\r",
+									"    };\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check lastname is equal to the expected value\", function () {\r",
-									"    pm.expect(pm.response.json().lastname).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().lastname).to.not.be.undefined;\r",
-									"    pm.expect(typeof pm.response.json().lastname).to.be.eql(\"string\");\r",
-									"    pm.expect(pm.response.json().lastname).to.eql(pm.collectionVariables.get(\"lastname\"));\r",
+									"// [2.4] TC04 - Validate firstname\r",
+									"pm.test(\"[2.4] TC04 - Validate firstname is correct\", function () {\r",
+									"    validateField(data.firstname, \"string\");\r",
+									"    pm.expect(data.firstname).to.eql(pm.collectionVariables.get(\"firstname\"));\r",
 									"});\r",
 									"\r",
-									"\r",
-									"\r",
-									"pm.test(\"Check bookingdates type is object\", function () {\r",
-									"\r",
-									"    pm.expect(pm.response.json().bookingdates).to.be.an(\"object\");\r",
-									"    pm.expect(pm.response.json().bookingdates).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().bookingdates).to.not.be.undefined;\r",
+									"// [2.4] TC05 - Validate lastname\r",
+									"pm.test(\"[2.4] TC05 - Validate lastname is correct\", function () {\r",
+									"    validateField(data.lastname, \"string\");\r",
+									"    pm.expect(data.lastname).to.eql(pm.collectionVariables.get(\"lastname\"));\r",
 									"});\r",
 									"\r",
-									"\r",
-									"pm.test(\"Check totalprice is equal to the expected value\", function () {\r",
-									"    const expectedTotalPrice = parseInt(pm.collectionVariables.get(\"totalprice\"));\r",
-									"\r",
-									"    pm.expect(pm.response.json().totalprice).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().totalprice).to.not.be.undefined;\r",
-									"    pm.expect(pm.response.json().totalprice).to.be.a('number');\r",
-									"    pm.expect(pm.response.json().totalprice).to.eql(pm.collectionVariables.get(\"totalprice\"));\r",
-									"\r",
+									"// [2.4] TC06 - Validate totalprice\r",
+									"pm.test(\"[2.4] TC06 - Validate totalprice is correct\", function () {\r",
+									"    validateField(data.totalprice, \"number\");\r",
+									"    const expected = parseInt(pm.collectionVariables.get(\"totalprice\"));\r",
+									"    pm.expect(data.totalprice).to.eql(expected);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check depositpaid is equal to the expected value\", function () {\r",
-									"    pm.expect(pm.response.json().depositpaid).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().depositpaid).to.not.be.undefined;\r",
-									"    pm.expect(typeof pm.response.json().depositpaid).to.be.eql(\"boolean\");\r",
-									"    pm.expect(pm.response.json().depositpaid).to.eql(pm.collectionVariables.get(\"depositpaid\"));\r",
+									"// [2.4] TC07 - Validate depositpaid\r",
+									"pm.test(\"[2.4] TC07 - Validate depositpaid is correct\", function () {\r",
+									"    validateField(data.depositpaid, \"boolean\");\r",
+									"    pm.expect(data.depositpaid).to.eql(pm.collectionVariables.get(\"depositpaid\"));\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check checkin type is object\", function () {\r",
-									"    pm.expect(pm.response.json().bookingdates.checkin).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().bookingdates.checkin).to.not.be.undefined;\r",
-									"    pm.expect(pm.response.json().bookingdates.checkin).to.be.a('string');\r",
-									"    pm.expect(pm.response.json().bookingdates.checkin).to.eql(pm.collectionVariables.get(\"checkin\"));\r",
-									"});\r",
-									"pm.test(\"Check checkout type is object\", function () {\r",
-									"    pm.expect(pm.response.json().bookingdates.checkout).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().bookingdates.checkout).to.not.be.undefined;\r",
-									"    pm.expect(pm.response.json().bookingdates.checkout).to.be.a('string');\r",
-									"    pm.expect(pm.response.json().bookingdates.checkout).to.eql(pm.collectionVariables.get(\"checkout\"));\r",
+									"// [2.4] TC08 - Validate bookingdates object\r",
+									"pm.test(\"[2.4] TC08 - Validate bookingdates is an object\", function () {\r",
+									"    validateField(data.bookingdates, \"object\");\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Check additionalneeds  is exist and not null or undefined and has value\", function () {\r",
-									"    pm.expect(pm.response.json().additionalneeds).to.not.be.null;\r",
-									"    pm.expect(pm.response.json().additionalneeds).to.not.be.undefined;\r",
-									"    pm.expect(pm.response.json().additionalneeds).to.be.a('string');\r",
-									"    pm.expect(pm.response.json().additionalneeds).to.eql(pm.collectionVariables.get(\"additionalneeds\"));\r",
-									"\r",
+									"// [2.4] TC09 - Validate checkin\r",
+									"pm.test(\"[2.4] TC09 - Validate checkin is correct\", function () {\r",
+									"    validateField(data.bookingdates.checkin, \"string\");\r",
+									"    pm.expect(data.bookingdates.checkin).to.eql(pm.collectionVariables.get(\"checkin\"));\r",
 									"});\r",
 									"\r",
+									"// [2.4] TC10 - Validate checkout\r",
+									"pm.test(\"[2.4] TC10 - Validate checkout is correct\", function () {\r",
+									"    validateField(data.bookingdates.checkout, \"string\");\r",
+									"    pm.expect(data.bookingdates.checkout).to.eql(pm.collectionVariables.get(\"checkout\"));\r",
+									"});\r",
 									"\r",
+									"// [2.4] TC11 - Validate additionalneeds\r",
+									"pm.test(\"[2.4] TC11 - Validate additionalneeds is correct\", function () {\r",
+									"    validateField(data.additionalneeds, \"string\");\r",
+									"    pm.expect(data.additionalneeds).to.eql(pm.collectionVariables.get(\"additionalneeds\"));\r",
+									"});\r",
 									"\r",
+									"// [2.4] TC12 - Set all values in one place\r",
+									"pm.test(\"[2.4] TC12 - Set all collection variables\", function () {\r",
+									"    pm.collectionVariables.set(\"firstname\", data.firstname);\r",
+									"    pm.collectionVariables.set(\"lastname\", data.lastname);\r",
+									"    pm.collectionVariables.set(\"totalprice\", data.totalprice);\r",
+									"    pm.collectionVariables.set(\"depositpaid\", data.depositpaid);\r",
+									"    pm.collectionVariables.set(\"checkin\", data.bookingdates.checkin);\r",
+									"    pm.collectionVariables.set(\"checkout\", data.bookingdates.checkout);\r",
+									"    pm.collectionVariables.set(\"additionalneeds\", data.additionalneeds);\r",
+									"});\r",
 									""
 								],
 								"type": "text/javascript",
@@ -733,7 +1143,8 @@
 							{
 								"key": "Cookie",
 								"value": "token={{token}}",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							}
 						],
 						"body": {
@@ -746,8 +1157,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{URL}}/booking/:id",
-							"protocol": "https",
+							"raw": "{{URL}}/booking/:id",
 							"host": [
 								"{{URL}}"
 							],
@@ -762,12 +1172,103 @@
 								}
 							]
 						},
-						"description": "### Retrieve Booking Details\n\nThis endpoint retrieves the details of a booking based on the provided booking ID.\n\n#### Request\n\n- Method: `GET`\n    \n- URL: `https://{{URL}}/booking/:id`\n    \n\n#### Response\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"bookingid\": {\n      \"type\": \"integer\"\n    },\n    \"booking\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"firstname\": {\n          \"type\": \"string\"\n        },\n        \"lastname\": {\n          \"type\": \"string\"\n        },\n        \"totalprice\": {\n          \"type\": \"integer\"\n        },\n        \"depositpaid\": {\n          \"type\": \"boolean\"\n        },\n        \"bookingdates\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"checkin\": {\n              \"type\": \"string\",\n              \"format\": \"date\"\n            },\n            \"checkout\": {\n              \"type\": \"string\",\n              \"format\": \"date\"\n            }\n          }\n        },\n        \"additionalneeds\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}\n\n ```"
+						"description": "### 🔎 Retrieve Booking Details\n\nThis endpoint allows you to **retrieve the full details of a booking** using the unique booking ID. It's a simple `GET` request to bring up everything you need to know. 📄✨\n\n---\n\n#### 📬 Request\n\n- **Method:** `GET`\n    \n- bashنسختحريرhttps://{{URL}}/booking/:id\n    \n    Replace `:id` with the actual booking ID you wish to fetch.\n    \n\n---\n\n#### 📦 Response\n\nOn success, you'll receive a JSON object containing all the key booking details — from guest names and booking dates to payment status and additional needs.\n\n``` json\n{\n  \"firstname\": \"Jane\",\n  \"lastname\": \"Smith\",\n  \"totalprice\": 200,\n  \"depositpaid\": true,\n  \"bookingdates\": {\n    \"checkin\": \"2025-06-10\",\n    \"checkout\": \"2025-06-15\"\n  },\n  \"additionalneeds\": \"Breakfast\"\n}\n\n ```\n\n#### 🧾 JSON Schema\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"firstname\": { \"type\": \"string\" },\n    \"lastname\": { \"type\": \"string\" },\n    \"totalprice\": { \"type\": \"integer\" },\n    \"depositpaid\": { \"type\": \"boolean\" },\n    \"bookingdates\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"checkin\": { \"type\": \"string\", \"format\": \"date\" },\n        \"checkout\": { \"type\": \"string\", \"format\": \"date\" }\n      }\n    },\n    \"additionalneeds\": { \"type\": \"string\" }\n  }\n}\n\n ```\n\n---\n\n🎯 Just provide a booking ID, and this endpoint will return everything you need to know about that"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "2.4 Get Booking ID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "token={{token}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/booking/:id",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"booking",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{bookingid}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Cowboy"
+								},
+								{
+									"key": "Report-To",
+									"value": "{\"group\":\"heroku-nel\",\"max_age\":3600,\"endpoints\":[{\"url\":\"https://nel.heroku.com/reports?ts=1746614374&sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add&s=czUHg42LwpAAIelA2Noqv6GuhZOCnwx1Lyxc4Z7p6po%3D\"}]}"
+								},
+								{
+									"key": "Reporting-Endpoints",
+									"value": "heroku-nel=https://nel.heroku.com/reports?ts=1746614374&sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add&s=czUHg42LwpAAIelA2Noqv6GuhZOCnwx1Lyxc4Z7p6po%3D"
+								},
+								{
+									"key": "Nel",
+									"value": "{\"report_to\":\"heroku-nel\",\"max_age\":3600,\"success_fraction\":0.005,\"failure_fraction\":0.05,\"response_headers\":[\"Via\"]}"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "166"
+								},
+								{
+									"key": "Etag",
+									"value": "W/\"a6-KSDkFykb64giOO+mKGH1oUeUHZU\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 07 May 2025 10:39:34 GMT"
+								},
+								{
+									"key": "Via",
+									"value": "1.1 vegur"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"firstname\": \"Kiley\",\n    \"lastname\": \"Bayer\",\n    \"totalprice\": 447,\n    \"depositpaid\": true,\n    \"bookingdates\": {\n        \"checkin\": \"1993-07-18\",\n        \"checkout\": \"1998-07-11\"\n    },\n    \"additionalneeds\": \"lunch\"\n}"
+						}
+					]
 				},
 				{
-					"name": "Delete Booking",
+					"name": "2.5 Delete Booking",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -783,9 +1284,18 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Booking ID deleted\", function () {\r",
+									"pm.test(\"[2.5] TC01 Validate Status code is 204\", function () {\r",
 									"    pm.response.to.have.status(201);\r",
-									"});"
+									"});\r",
+									"\r",
+									"pm.test(\"[2.5] TC02 Validate Response time is less than 300ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"[2.5]] TC03 Validate Check response body to not contain bookId\", function () {\r",
+									"    pm.expect(pm.response.text()).to.not.include(\"bookingid\");\r",
+									"});\r",
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -801,7 +1311,8 @@
 							},
 							{
 								"key": "Cookie",
-								"value": "token={{token}}"
+								"value": "token={{token}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -814,8 +1325,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{URL}}/booking/:id",
-							"protocol": "https",
+							"raw": "{{URL}}/booking/:id",
 							"host": [
 								"{{URL}}"
 							],
@@ -830,33 +1340,118 @@
 								}
 							]
 						},
-						"description": "# Booking - DeleteBooking\n\nReturns the ids of all the bookings that exist within the API. Can take optional query strings to search and return a subset of booking ids.\n\n  \nHTTP DELETE /booking/:id\n\nThis endpoint is used to delete a specific booking by providing the booking ID in the URL.\n\n#### Request Body\n\nThis request does not require a request body.\n\n#### Response\n\nThe response will not contain a response body. The status code will indicate the success or failure of the deletion operation."
+						"description": "StartFragment\n\n### 🗑️ Booking - DeleteBooking\n\nTime to say goodbye to a reservation? This endpoint allows you to **delete a specific booking** by simply passing its ID in the URL. Clean, quick, and final. 💥\n\n---\n\n#### 📬 Request\n\n- **Method:** `DELETE`\n    \n- **URL Format:**\n    \n\n``` bash\nhttps://{{URL}}/booking/:id\n ```\n\nReplace `:id` with the booking ID you want to remove.\n\n📭 **Request Body:**\n\nNo request body is needed — just the ID in the URL.\n\n---\n\n#### 📦 Response\n\nWhen the deletion is successful, you’ll receive:\n\n- **Status:** `201 Created`\n    \n- **Content-Type:** `text/plain`\n    \n- Body:\n    \n\n``` bash\nCreated\n\n ```\n\n🚀 Whether it’s a cancellation or cleanup, this endpoint helps you keep things tidy and up-to-date. Let me"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "2.5 Delete Booking",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Cookie",
+										"value": "token={{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/booking/:id",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"booking",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{bookingid}}"
+										}
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Cowboy"
+								},
+								{
+									"key": "Report-To",
+									"value": "{\"group\":\"heroku-nel\",\"max_age\":3600,\"endpoints\":[{\"url\":\"https://nel.heroku.com/reports?ts=1746614376&sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add&s=N0ekSit1DyJ257Co7QacSmGFe60ztwlF%2BFTwplysAZ8%3D\"}]}"
+								},
+								{
+									"key": "Reporting-Endpoints",
+									"value": "heroku-nel=https://nel.heroku.com/reports?ts=1746614376&sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add&s=N0ekSit1DyJ257Co7QacSmGFe60ztwlF%2BFTwplysAZ8%3D"
+								},
+								{
+									"key": "Nel",
+									"value": "{\"report_to\":\"heroku-nel\",\"max_age\":3600,\"success_fraction\":0.005,\"failure_fraction\":0.05,\"response_headers\":[\"Via\"]}"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "7"
+								},
+								{
+									"key": "Etag",
+									"value": "W/\"7-rM9AyJuqT6iOan/xHh+AW+7K/T8\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 07 May 2025 10:39:36 GMT"
+								},
+								{
+									"key": "Via",
+									"value": "1.1 vegur"
+								}
+							],
+							"cookie": [],
+							"body": "Created"
+						}
+					]
 				},
 				{
-					"name": "Get Booking ID",
+					"name": "2.6 Get Booking ID",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 404\", function () {\r",
-									"    pm.response.to.have.status(404);\r",
+									"pm.test(\"[2.6] TC01 Validate Response Code For Adding New Book is 404\", function () {\r",
+									"    pm.expect(pm.response.code).to.have.equal(404);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Response time is less than 200ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"pm.test(\"[2.6] TC02 Validate Response time is less than 300ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
 									"});\r",
-									"\r",
-									"\r",
-									"// pm.test(\"Booking ID is not exist anymore\", function () {\r",
-									"//     pm.expect(pm.response.json().bookingid).to.be.not.exist\r",
-									"\r",
-									"// });\r",
-									"\r",
-									"\r",
-									"\r",
 									""
 								],
 								"type": "text/javascript",
@@ -886,8 +1481,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{URL}}/booking/:id",
-							"protocol": "https",
+							"raw": "{{URL}}/booking/:id",
 							"host": [
 								"{{URL}}"
 							],
@@ -902,38 +1496,192 @@
 								}
 							]
 						},
-						"description": "### Retrieve Booking Details\n\nThis API endpoint is used to retrieve the details of a specific booking by providing the booking ID in the URL.\n\n#### Request\n\n- Method: GET\n    \n- URL: `https://{{URL}}/booking/:id`\n    \n- URL Parameters:\n    \n    - `:id` (string) - The unique identifier of the booking.\n        \n\n#### Response\n\nThe response for this request is a JSON object representing the details of the booking. Here is a JSON schema representing the structure of the response:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"bookingid\": {\"type\": \"integer\"},\n    \"booking\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"firstname\": {\"type\": \"string\"},\n        \"lastname\": {\"type\": \"string\"},\n        \"totalprice\": {\"type\": \"integer\"},\n        \"depositpaid\": {\"type\": \"boolean\"},\n        \"bookingdates\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"checkin\": {\"type\": \"string\", \"format\": \"date-time\"},\n            \"checkout\": {\"type\": \"string\", \"format\": \"date-time\"}\n          }\n        },\n        \"additionalneeds\": {\"type\": \"string\"}\n      }\n    },\n    \"additionalinfo\": {\"type\": \"string\"}\n  }\n}\n\n ```"
+						"description": "### ❓ Retrieve Booking Details (After Deletion)\n\nTrying to fetch a booking that may have been removed? This endpoint checks for the existence of a booking using its ID. It's a great way to verify whether a deletion actually succeeded. 🕵️‍♂️🗂️\n\n---\n\n#### 📬 Request\n\n- **Method:** `GET`\n    \n\n``` bash\nhttps://{{URL}}/booking/:id\n ```\n\nReplace `:id` with the unique booking identifier you're looking for.\n\n---\n\n#### 🧾 URL Parameters\n\n| Parameter | Type | Description |\n| --- | --- | --- |\n| `:id` | string | The unique ID of the booking |\n\n---\n\n#### 📦 Response\n\nThe response is a JSON object containing all booking details—**if the booking exists**. If the booking was successfully deleted earlier, this request is likely to return a `404 Not Found` or an empty result.\n\nHere’s the expected structure when a booking **is found**:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"bookingid\": { \"type\": \"integer\" },\n    \"booking\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"firstname\": { \"type\": \"string\" },\n        \"lastname\": { \"type\": \"string\" },\n        \"totalprice\": { \"type\": \"integer\" },\n        \"depositpaid\": { \"type\": \"boolean\" },\n        \"bookingdates\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"checkin\": { \"type\": \"string\", \"format\": \"date-time\" },\n            \"checkout\": { \"type\": \"string\", \"format\": \"date-time\" }\n          }\n        },\n        \"additionalneeds\": { \"type\": \"string\" }\n      }\n    },\n    \"additionalinfo\": { \"type\": \"string\" }\n  }\n}\n\n ```\n\n---\n\n🧹 **Tip:** If you receive a `404` here, that’s confirmation your deletion went through! ✅"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "2.6 Get Booking ID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "token={{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/booking/:id",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"booking",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{bookingid}}"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Cowboy"
+								},
+								{
+									"key": "Report-To",
+									"value": "{\"group\":\"heroku-nel\",\"max_age\":3600,\"endpoints\":[{\"url\":\"https://nel.heroku.com/reports?ts=1746614379&sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add&s=i6Ii4Hvk6gfZxidOoQgHTnXcT0xSH1FQYLuxMw%2FoA3w%3D\"}]}"
+								},
+								{
+									"key": "Reporting-Endpoints",
+									"value": "heroku-nel=https://nel.heroku.com/reports?ts=1746614379&sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add&s=i6Ii4Hvk6gfZxidOoQgHTnXcT0xSH1FQYLuxMw%2FoA3w%3D"
+								},
+								{
+									"key": "Nel",
+									"value": "{\"report_to\":\"heroku-nel\",\"max_age\":3600,\"success_fraction\":0.005,\"failure_fraction\":0.05,\"response_headers\":[\"Via\"]}"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "9"
+								},
+								{
+									"key": "Etag",
+									"value": "W/\"9-0gXL1ngzMqISxa6S1zx3F4wtLyg\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 07 May 2025 10:39:39 GMT"
+								},
+								{
+									"key": "Via",
+									"value": "1.1 vegur"
+								}
+							],
+							"cookie": [],
+							"body": "Not Found"
+						}
+					]
 				}
 			],
-			"description": "# Booking\n\nReturns the ids of all the bookings that exist within the API. Can take optional query strings to search and return a subset of booking ids."
+			"description": "### 📋 Booking - Get All Bookings\n\nWant the full guest list? 🎟️  \n  \nThis endpoint returns the **IDs of all bookings** in the system!  \n  \nYou can also add optional query strings to filter and fetch just the bookings you're looking for. 🕵️‍♂️✨"
 		},
 		{
-			"name": "Ping",
+			"name": "3- Ping",
 			"item": [
 				{
-					"name": "Ping",
+					"name": "3.1 Ping - HealthCheck",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"[3.1] TC01 Validate Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "https://restful-booker.herokuapp.com/ping",
-							"protocol": "https",
-							"host": [
-								"restful-booker",
-								"herokuapp",
-								"com"
-							],
-							"path": [
-								"ping"
-							]
-						},
-						"description": "Generated from cURL: curl -i https://restful-booker.herokuapp.com/ping\r\n"
+						"url": "{{URL}}/ping",
+						"description": "### 🛎️ GET /ping\n\nNeed to check if the service is up and running? This endpoint is your friendly **health check** — like knocking on the server’s door to make sure it’s home. 🏠🔍\n\n---\n\n#### 📬 Request\n\n- **Method:** `GET`\n    \n- arduinoنسختحريرhttps://{{URL}}/ping\n    \n- **Request Body:**  \n      \n    None required — just send the request and wait for a response.\n    \n\n---\n\n#### 📦 Response\n\n| Property | Value |\n| --- | --- |\n| **Status** | `201 Created` |\n| **Content-Type** | `text/plain` |\n| **Body** | `Created` |\n\n---\n\n#### 🧾 Response Body Schema\n\n``` bash\n{\n  \"type\": \"string\"\n}\n\n ```\n\n---\n\n📡 Whether you're setting up monitoring or just double-checking availability, this simple ping gives you peace of mind that the API is alive and ready to serve!"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "3.1 Ping - HealthCheck",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": "{{URL}}/ping"
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Server",
+									"value": "Cowboy"
+								},
+								{
+									"key": "Report-To",
+									"value": "{\"group\":\"heroku-nel\",\"max_age\":3600,\"endpoints\":[{\"url\":\"https://nel.heroku.com/reports?ts=1746614382&sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add&s=8B%2Bxx0ZO6CdqqtguHRkZKgeoA%2FsvD4FEAGbQVmXw1GM%3D\"}]}"
+								},
+								{
+									"key": "Reporting-Endpoints",
+									"value": "heroku-nel=https://nel.heroku.com/reports?ts=1746614382&sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add&s=8B%2Bxx0ZO6CdqqtguHRkZKgeoA%2FsvD4FEAGbQVmXw1GM%3D"
+								},
+								{
+									"key": "Nel",
+									"value": "{\"report_to\":\"heroku-nel\",\"max_age\":3600,\"success_fraction\":0.005,\"failure_fraction\":0.05,\"response_headers\":[\"Via\"]}"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "7"
+								},
+								{
+									"key": "Etag",
+									"value": "W/\"7-rM9AyJuqT6iOan/xHh+AW+7K/T8\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 07 May 2025 10:39:42 GMT"
+								},
+								{
+									"key": "Via",
+									"value": "1.1 vegur"
+								}
+							],
+							"cookie": [],
+							"body": "Created"
+						}
+					]
 				}
-			]
+			],
+			"description": "### 📡 GET /ping — Service Check\n\nFeeling curious? Give the API a little _ping_! 🛎️"
 		}
 	],
 	"variable": [
